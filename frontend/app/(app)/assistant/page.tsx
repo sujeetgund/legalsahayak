@@ -1,175 +1,137 @@
 "use client";
 
-// import { askLegalQuestion } from "@/ai/flows/ai-legal-assistance";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  ArrowRight,
-  BookOpen,
-  Send,
-  Users,
-} from "lucide-react";
+import { authUtils } from "@/lib/auth";
+import { ArrowRight, BookOpen, Loader2, Send, Users } from "lucide-react";
 import Link from "next/link";
-import { useState, useTransition } from "react";
-// import { useChatHistory } from "@/hooks/use-chat-history";
-// import { LoadingModal } from "./components/loading-modal";
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
 
-// function LegalDictionary() {
-//   const [term, setTerm] = useState("");
-//     const [definition, setDefinition] = useState<DefineLegalTermOutput | null>(
-//       null,
-//     );
-//   const [isPending] = useTransition();
-//   const [isOpen, setIsOpen] = useState(false);
+type Demographics = {
+  age: number;
+  gender: string;
+  location: string;
+  education_level: string;
+  job_title: string;
+};
 
-//     const handleSearch = (e: FormEvent) => {
-//       e.preventDefault();
-//       if (!term.trim()) return;
+type ActionPlanStep = {
+  title: string;
+  description: string;
+};
 
-//       startTransition(async () => {
-//         try {
-//           const result = await defineLegalTerm({ term });
-//           setDefinition(result);
-//           setIsOpen(true);
-//         } catch (error) {
-//           console.error(error);
-//           setDefinition({
-//             definition: "Could not find a definition for this term.",
-//             example: "",
-//             relatedTerms: [],
-//           });
-//           setIsOpen(true);
-//         }
-//       });
-//     };
-
-//   return (
-//     <Card className="p-8 shadow-medium hover:shadow-heavy transition-shadow duration-300 flex flex-col justify-between h-full">
-//       <div>
-//         <div className="p-4 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-4">
-//           <LifeBuoy className="h-10 w-10 text-accent" />
-//         </div>
-//         <CardTitle className="text-2xl font-bold mb-2">
-//           Legal Dictionary
-//         </CardTitle>
-//         <CardDescription className="mb-4">
-//           Get plain-language definitions for complex legal terms.
-//         </CardDescription>
-//       </div>
-//       <div className="mt-4">
-//         <Popover open={isOpen} onOpenChange={setIsOpen}>
-//           <PopoverTrigger asChild>
-//             <form onSubmit={handleSearch} className="relative">
-//               <Input
-//                 placeholder="Search legal terms..."
-//                 className="pr-10"
-//                 value={term}
-//                 onChange={(e) => setTerm(e.target.value)}
-//               />
-//               <Button
-//                 type="submit"
-//                 variant="ghost"
-//                 size="icon"
-//                 className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8"
-//                 disabled={isPending}
-//               >
-//                 {isPending ? (
-//                   <Loader2 className="w-4 h-4 animate-spin" />
-//                 ) : (
-//                   <Search className="w-4 h-4 text-muted-foreground" />
-//                 )}
-//               </Button>
-//             </form>
-//           </PopoverTrigger>
-//           <PopoverContent className="w-80" side="bottom" align="start">
-//             {definition && (
-//               <div className="space-y-4">
-//                 <div>
-//                   <h4 className="font-bold text-lg">{term}</h4>
-//                   <p className="text-sm text-muted-foreground">
-//                     {definition.definition}
-//                   </p>
-//                 </div>
-//                 {definition.example && (
-//                   <div>
-//                     <h5 className="font-semibold flex items-center gap-2">
-//                       <Lightbulb className="w-4 h-4 text-yellow-500" />
-//                       Example
-//                     </h5>
-//                     <p className="text-sm text-muted-foreground italic">
-//                       &quot;{definition.example}&quot;
-//                     </p>
-//                   </div>
-//                 )}
-//                 {definition.relatedTerms.length > 0 && (
-//                   <div>
-//                     <h5 className="font-semibold flex items-center gap-2">
-//                       <HelpCircle className="w-4 h-4 text-blue-500" />
-//                       Related Terms
-//                     </h5>
-//                     <div className="flex flex-wrap gap-2 mt-2">
-//                       {definition.relatedTerms.map((relatedTerm) => (
-//                         <Badge variant="secondary" key={relatedTerm}>
-//                           {relatedTerm}
-//                         </Badge>
-//                       ))}
-//                     </div>
-//                   </div>
-//                 )}
-//               </div>
-//             )}
-//           </PopoverContent>
-//         </Popover>
-//       </div>
-//     </Card>
-//   );
-// }
+type ApiResponse = {
+  answer: string;
+  confidence: number;
+  legal_references: string[];
+  action_plan: ActionPlanStep[];
+};
 
 export default function AssistantPage() {
   const [input, setInput] = useState("");
-  const [isPending] = useTransition();
-  //   const router = useRouter();
-  //   const { setHistory } = useChatHistory();
+  const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
 
-  //   const handleSubmit = (e: FormEvent) => {
-  //     e.preventDefault();
-  //     if (!input.trim() && files.length === 0) return;
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
 
-  //     const userMessage = {
-  //       role: "user" as const,
-  //       content: input,
-  //       files: files.map((f) => ({ name: f.name, type: f.type })),
-  //     };
+    const question = input.trim();
+    if (!question) return;
 
-  //     startTransition(async () => {
-  //       let assistantMessage;
-  //       try {
-  //         const result = await askLegalQuestion({
-  //           question: input,
-  //         });
-  //         assistantMessage = {
-  //           role: "assistant" as const,
-  //           content: result.summary,
-  //           assistantResponse: result,
-  //         };
-  //         setHistory([userMessage, assistantMessage]);
-  //         router.push("/assistant/chat");
-  //       } catch (error) {
-  //         console.error(error);
-  //         assistantMessage = {
-  //           role: "assistant" as const,
-  //           content: "An error occurred. Please try again.",
-  //         };
-  //         setHistory([userMessage, assistantMessage]);
-  //         router.push("/assistant/chat");
-  //       }
-  //     });
-  //   };
+    setIsPending(true);
+
+    try {
+      const user = authUtils.getCurrentUser();
+      const profile = user?.profile;
+
+      const demographics: Demographics = {
+        age: profile?.age ?? 0,
+        gender: profile?.gender ?? "Not specified",
+        location: profile?.location ?? "India",
+        education_level: profile?.education_level ?? "Not specified",
+        job_title: profile?.job_title ?? "Not specified",
+      };
+
+      const res = await fetch("/api/qa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, demographics }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`API error: ${res.status}`);
+      }
+
+      const data: ApiResponse = await res.json();
+
+      // Store initial conversation in sessionStorage
+      const initialConversation = [
+        {
+          id: `${Date.now()}-user`,
+          role: "user" as const,
+          content: question,
+        },
+        {
+          id: `${Date.now()}-assistant`,
+          role: "assistant" as const,
+          content: data.answer,
+          response: data,
+        },
+      ];
+
+      sessionStorage.setItem(
+        "initial_conversation",
+        JSON.stringify(initialConversation),
+      );
+
+      router.push("/assistant/chat");
+    } catch (error) {
+      console.error("Failed to get response:", error);
+
+      // Store error conversation
+      const errorConversation = [
+        {
+          id: `${Date.now()}-user`,
+          role: "user" as const,
+          content: question,
+        },
+        {
+          id: `${Date.now()}-assistant`,
+          role: "assistant" as const,
+          content: "Sorry, I encountered an error. Please try again.",
+        },
+      ];
+
+      sessionStorage.setItem(
+        "initial_conversation",
+        JSON.stringify(errorConversation),
+      );
+
+      router.push("/assistant/chat");
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <div className="space-y-12">
-      {/* <LoadingModal open={isPending} /> */}
+      {isPending && (
+        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+          <Card className="p-8 flex flex-col items-center gap-4">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div className="text-center">
+              <h3 className="text-lg font-semibold">
+                Analyzing your question...
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                This may take a moment
+              </p>
+            </div>
+          </Card>
+        </div>
+      )}
       {/* Hero Section */}
       <section className="w-full py-16 md:py-24 lg:py-32 text-center">
         <div className="container px-4 md:px-6 z-10">
@@ -183,7 +145,7 @@ export default function AssistantPage() {
             </p>
           </div>
           <div className="max-w-3xl mx-auto mt-12">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="relative bg-background rounded-xl shadow-heavy border border-transparent transition-all">
                 <Textarea
                   value={input}
@@ -193,7 +155,8 @@ export default function AssistantPage() {
                   className="pr-36 min-h-[80px] text-lg p-6 rounded-xl shadow-none border-0 focus-visible:ring-0 resize-none"
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
-                      //   handleSubmit(e);
+                      e.preventDefault();
+                      handleSubmit(e);
                     }
                   }}
                 />
@@ -204,7 +167,11 @@ export default function AssistantPage() {
                     disabled={isPending || input.trim() === ""}
                     className="w-12 h-12 rounded-full btn-primary-gradient"
                   >
-                    <Send className="w-6 h-6" />
+                    {isPending ? (
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                    ) : (
+                      <Send className="w-6 h-6" />
+                    )}
                   </Button>
                 </div>
               </div>
