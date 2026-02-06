@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 13% 98%; /* #F8F9FA Soft Gray */
+    --foreground: 220 13% 25%; /* #374151 Charcoal */
+    --card: 0 0% 100%; /* #FFFFFF Clean White */
+    --card-foreground: 220 13% 25%; /* #374151 Charcoal */
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 25%;
+    --primary: 215 54% 23%; /* #1B365D Deep Navy */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+    --secondary: 220 13% 91%; /* #E5E7EB Light Gray */
+    --secondary-foreground: 220 13% 25%;
+    --muted: 220 13% 91%;
+    --muted-foreground: 220 9% 45%; /* #6B7280 Medium Gray */
+    --accent: 43 100% 50%; /* #FFB800 Vibrant Gold */
+    --accent-foreground: 215 54% 23%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 88%; /* Slightly darker than Light Gray */
+    --input: 220 13% 88%;
+    --ring: 43 100% 50%;
+    --radius: 0.5rem; /* 8px */
+    --chart-1: 215 54% 23%;
+    --chart-2: 43 100% 50%;
+    --chart-3: 35 100% 50%; /* #FF8F00 Warm Amber */
+    --chart-4: 215 30% 50%;
+    --chart-5: 43 80% 60%;
+    --sidebar-background: 215 54% 23%; /* Deep Navy */
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 43 100% 50%;
+    --sidebar-primary-foreground: 215 54% 23%;
+    --sidebar-accent: 215 54% 33%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 54% 33%;
+    --sidebar-ring: 43 100% 50%;
+  }
+ 
+  .dark {
+    --background: 215 54% 15%; /* Darker Navy */
+    --foreground: 220 13% 91%; /* Light Gray */
+    --card: 215 54% 20%; /* Slightly lighter Navy */
+    --card-foreground: 220 13% 91%;
+    --popover: 215 54% 15%;
+    --popover-foreground: 220 13% 91%;
+    --primary: 0 0% 100%; /* White */
+    --primary-foreground: 215 54% 23%; /* Deep Navy */
+    --secondary: 215 54% 25%;
+    --secondary-foreground: 220 13% 91%;
+    --muted: 215 54% 25%;
+    --muted-foreground: 220 9% 65%;
+    --accent: 43 100% 50%; /* Vibrant Gold */
+    --accent-foreground: 215 54% 23%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 54% 25%;
+    --input: 215 54% 25%;
+    --ring: 43 100% 50%;
+    --sidebar-background: 215 54% 15%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 43 100% 50%;
+    --sidebar-primary-foreground: 215 54% 23%;
+    --sidebar-accent: 215 54% 25%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 54% 25%;
+    --sidebar-ring: 43 100% 50%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    line-height: 1.6;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply leading-tight;
+  }
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-accent to-amber-500 bg-clip-text text-transparent;
+}
+
+.btn-primary-gradient {
+  background-image: linear-gradient(to right, hsl(var(--accent)), #FF8F00);
+  border: 0;
+}
