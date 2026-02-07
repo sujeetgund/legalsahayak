@@ -12,8 +12,6 @@ from langchain_groq import ChatGroq
 from langchain_community.vectorstores import FAISS
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_core.prompts import PromptTemplate
-from langchain_classic.retrievers import EnsembleRetriever
-from langchain_community.retrievers import BM25Retriever
 
 from langchain_community.document_loaders import TextLoader, DirectoryLoader
 from langchain_text_splitters.markdown import MarkdownHeaderTextSplitter
@@ -63,13 +61,13 @@ class QAService:
             allow_dangerous_deserialization=True,
         )
         self.vector_retriever = self.vectorstore.as_retriever(search_kwargs={"k": 5})
-        self.bm25_retriever = BM25Retriever.from_documents(
-            documents=self._load_docs(), k=5
-        )
-        self.ensemble_retriever = EnsembleRetriever(
-            retrievers=[self.vector_retriever, self.bm25_retriever],
-            weights=[0.7, 0.3],
-        )
+        # self.bm25_retriever = BM25Retriever.from_documents(
+        #     documents=self._load_docs(), k=5
+        # )
+        # self.ensemble_retriever = EnsembleRetriever(
+        #     retrievers=[self.vector_retriever, self.bm25_retriever],
+        #     weights=[0.7, 0.3],
+        # )
         self.qa_prompt = PromptTemplate.from_template(template)
 
         end_time = time.time()
@@ -114,8 +112,8 @@ class QAService:
         del self.vectorstore
         del self.qa_prompt
         del self.vector_retriever
-        del self.bm25_retriever
-        del self.ensemble_retriever
+        # del self.bm25_retriever
+        # del self.ensemble_retriever
         logger.info("QA service cleaned up")
 
     async def get_answer(self, qa_request: QARequestModel) -> QAResponseModel:
@@ -123,17 +121,17 @@ class QAService:
             logger.info("Processing QA request")
             logger.debug(f"Question: {qa_request.question}")
             logger.debug(
-                f"Demographics: age={qa_request.demographics.age}, gender={qa_request.demographics.gender}, location={qa_request.demographics.location}"
+                f"Demographics: {qa_request.demographics.dict() if qa_request.demographics else 'None'}"
             )
 
             # Retrieve relevant documents (run in thread pool to avoid blocking)
             loop = asyncio.get_event_loop()
-            logger.debug("Starting document retrieval from ensemble retriever...")
+            logger.debug("Starting document retrieval from vector retriever...")
 
             try:
                 retrieved_docs = await asyncio.wait_for(
                     loop.run_in_executor(
-                        None, self.ensemble_retriever.invoke, qa_request.question
+                        None, self.vector_retriever.invoke, qa_request.question
                     ),
                     timeout=120.0,
                 )
