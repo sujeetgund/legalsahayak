@@ -49,6 +49,40 @@ export function useAuth() {
     setIsAuthenticated(false);
   }, []);
 
+  const updateProfile = useCallback((profile: User["profile"]) => {
+    const success = authUtils.updateUserProfile(profile || {});
+    if (success) {
+      const updatedUser = authUtils.getCurrentUser();
+      setUser(updatedUser);
+      return true;
+    }
+    return false;
+  }, []);
+
+  const updateUserInfo = useCallback((fullName: string, email: string) => {
+    const success = authUtils.updateUserInfo(fullName, email);
+    if (success) {
+      const updatedUser = authUtils.getCurrentUser();
+      setUser(updatedUser);
+      return true;
+    }
+    return false;
+  }, []);
+
+  const deleteAccount = useCallback(() => {
+    const success = authUtils.deleteAccount();
+    if (success) {
+      setUser(null);
+      setIsAuthenticated(false);
+      return true;
+    }
+    return false;
+  }, []);
+
+  const exportData = useCallback(() => {
+    return authUtils.exportUserData();
+  }, []);
+
   return {
     user,
     isLoading,
@@ -56,5 +90,9 @@ export function useAuth() {
     login,
     register,
     logout,
+    updateProfile,
+    updateUserInfo,
+    deleteAccount,
+    exportData,
   };
 }

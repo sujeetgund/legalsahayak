@@ -147,34 +147,28 @@ export function AppHeader() {
       <NavigationMenu className="hidden md:flex ml-6">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link href="/assistant" passHref>
-              <NavigationMenuLink
-                href="/assistant"
-                className={navigationMenuTriggerStyle()}
-              >
+            <NavigationMenuLink asChild>
+              <Link href="/assistant" className={navigationMenuTriggerStyle()}>
                 AI Assistant
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href="/forum" passHref>
-              <NavigationMenuLink
-                href="/forum"
-                className={navigationMenuTriggerStyle()}
-              >
+            <NavigationMenuLink asChild>
+              <Link href="/forum" className={navigationMenuTriggerStyle()}>
                 Community
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
           {/* <NavigationMenuItem>
-            <Link href="/legal-library" passHref>
-            <NavigationMenuLink
-              href="/legal-library"
-              className={navigationMenuTriggerStyle()}
-            >
-              Legal Library
+            <NavigationMenuLink asChild>
+              <Link
+                href="/legal-library"
+                className={navigationMenuTriggerStyle()}
+              >
+                Legal Library
+              </Link>
             </NavigationMenuLink>
-            </Link>
           </NavigationMenuItem> */}
         </NavigationMenuList>
       </NavigationMenu>

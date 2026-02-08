@@ -152,6 +152,88 @@ export const authUtils = {
     }
   },
 
+  // Update user basic info (name, email)
+  updateUserInfo: (fullName: string, email: string): boolean => {
+    try {
+      const currentUser = authUtils.getCurrentUser();
+      if (!currentUser) {
+        return false;
+      }
+
+      // Check if new email is already taken by another user
+      const users = authUtils.getAllUsers();
+      const emailTaken = users.some(
+        (u) => u.email === email && u.id !== currentUser.id,
+      );
+      if (emailTaken) {
+        return false;
+      }
+
+      // Update current user
+      const updatedUser: User = {
+        ...currentUser,
+        fullName,
+        email,
+      };
+
+      // Update in localStorage
+      authUtils.setCurrentUser(updatedUser);
+
+      // Update in users list
+      const userIndex = users.findIndex((u) => u.id === currentUser.id);
+      if (userIndex !== -1) {
+        users[userIndex] = updatedUser;
+        localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Update user info error:", error);
+      return false;
+    }
+  },
+
+  // Delete user account
+  deleteAccount: (): boolean => {
+    try {
+      const currentUser = authUtils.getCurrentUser();
+      if (!currentUser) {
+        return false;
+      }
+
+      // Remove from users list
+      const users = authUtils.getAllUsers();
+      const filteredUsers = users.filter((u) => u.id !== currentUser.id);
+      localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(filteredUsers));
+
+      // Clear current user
+      authUtils.logout();
+
+      return true;
+    } catch (error) {
+      console.error("Delete account error:", error);
+      return false;
+    }
+  },
+
+  // Export user data
+  exportUserData: (): string | null => {
+    try {
+      const currentUser = authUtils.getCurrentUser();
+      if (!currentUser) {
+        return null;
+      }
+
+      // Remove password from export for security
+      const { password, ...userDataWithoutPassword } = currentUser;
+
+      return JSON.stringify(userDataWithoutPassword, null, 2);
+    } catch (error) {
+      console.error("Export user data error:", error);
+      return null;
+    }
+  },
+
   // Clear all auth data (for testing/logout)
   clearAuth: (): void => {
     try {
