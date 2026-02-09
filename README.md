@@ -1,30 +1,10 @@
-# Legal Sahayak (लीगल सहायक)
-
-**RAG‑Based Explainable Legal Aid System for Community Empowerment**
+# Legal Sahayak: RAG‑Based Explainable Legal Aid System for Community Empowerment
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
 
----
-
-## 📋 Table of Contents
-
-- [Problem Statement](#-problem-statement)
-- [Our Solution](#-our-solution)
-- [System Architecture](#-system-architecture)
-- [Key Features](#-key-features)
-- [Research Innovation](#-research-innovation)
-- [Community Impact: Madhya Pradesh](#-community-impact-madhya-pradesh)
-- [Technology Stack](#-technology-stack)
-- [Installation & Setup](#-installation--setup)
-- [Usage](#-usage)
-- [API Documentation](#-api-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
-
----
 
 ## 🚨 Problem Statement
 
@@ -257,7 +237,6 @@ flowchart LR
 
 - PWA support for unreliable connectivity
 - Cached responses for common queries
-- Lightweight mobile app (< 10 MB)
 
 ---
 
@@ -272,11 +251,6 @@ Unlike generic chatbots, Legal Sahayak adjusts:
 - **Lexical complexity** (Flesch-Kincaid grade level matching)
 - **Cultural context** (examples relevant to rural MP vs. urban Bhopal)
 - **Cognitive load** (shorter sentences for lower education levels)
-
-**Research Validation**:
-
-- A/B testing shows **34% higher comprehension** among users with < 8th-grade education
-- Readability scores improved from **Grade 16** (legal jargon) to **Grade 8** (simplified)
 
 #### 2. **Explainability via Source Attribution**
 
@@ -299,7 +273,7 @@ This enables:
 Combines:
 
 - **Dense Retrieval** (FAISS): Semantic similarity via embeddings
-- **Sparse Retrieval** (BM25, planned): Term-frequency matching
+- **Sparse Retrieval** (BM25): Term-frequency matching
 - **Ensemble Weighting**: 70% semantic + 30% keyword
 
 Benchmark results (F1 score on legal QA dataset):
@@ -364,7 +338,7 @@ Converts declarative legal knowledge into procedural steps:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/legalsahayak.git
+git clone https://github.com/sujeetgund/legalsahayak.git
 cd legalsahayak
 ```
 
@@ -446,7 +420,7 @@ pnpm install
 Create a `.env.local` file in the `frontend/` directory:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+BACKEND_SERVER_URL=http://localhost:8000/api/v1
 ```
 
 #### c. Run Development Server
@@ -477,7 +451,7 @@ Services:
 
 ### Web Interface
 
-1. **Navigate to Chat Interface**: `http://localhost:3000/assistant/chat`
+1. **Navigate to Chat Interface**: `http://localhost:3000`
 
 2. **Fill User Profile** (one-time):
    - Age: 25-35
@@ -616,7 +590,7 @@ We welcome contributions from legal experts, developers, and translators!
 1. **Fork the Repository**
 
    ```bash
-   git fork https://github.com/yourusername/legalsahayak.git
+   git fork https://github.com/sujeetgund/legalsahayak.git
    ```
 
 2. **Create Feature Branch**
@@ -640,35 +614,11 @@ We welcome contributions from legal experts, developers, and translators!
 
 5. **Create Pull Request**
 
-### Priority Contributions Needed
-
-- 🌐 **Hindi Translations**: Transliterate UI and responses
-- 📖 **Legal Content**: Add MP-specific laws (property, taxation, criminal)
-- 🎨 **UI/UX**: Mobile-first design improvements
-- 🧪 **Testing**: Unit tests for RAG pipeline
-- 📊 **Analytics**: User behavior tracking (privacy-preserving)
-
 ---
 
 ## 📄 License
 
 This project is licensed under the **MIT License**. See [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Contact & Support
-
-- **Email**: support@legalsahayak.org
-- **GitHub Issues**: [Report a Bug](https://github.com/yourusername/legalsahayak/issues)
-- **Discussion Forum**: [GitHub Discussions](https://github.com/yourusername/legalsahayak/discussions)
-
-### Partners & Acknowledgments
-
-- **National Legal Services Authority (NALSA)**
-- **MP State Legal Services Authority**
-- **District Legal Services Authorities (DLSA)** - Bhopal, Indore, Jabalpur
-- **Groq Labs** - LLM API sponsorship (planned)
-- **HuggingFace** - Open-source embeddings
 
 ---
 
@@ -681,12 +631,6 @@ This project is built on the shoulders of giants:
 - **Groq**: Affordable, fast LLM inference
 - **Next.js & Vercel**: Seamless frontend development
 - **shadcn/ui**: Beautiful, accessible UI components
-
-Special thanks to:
-
-- Legal aid volunteers who validated our content
-- Beta testers from Bhopal and Indore
-- Open-source community for tools and libraries
 
 ---
 
