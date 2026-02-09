@@ -176,7 +176,7 @@ export default function Home() {
                     size="lg"
                     className="rounded-button tracking-buttons text-lg px-8 py-6 transition-transform hover:scale-105 btn-primary-gradient text-primary-foreground font-semibold"
                   >
-                    <Link href="/onboarding" prefetch={false}>
+                    <Link href="/assistant" prefetch={false}>
                       Get Legal Help Now
                     </Link>
                   </Button>
