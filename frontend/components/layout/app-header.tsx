@@ -16,6 +16,14 @@ import {
   Scale,
   Search,
   Users,
+  UserCircle,
+  HelpCircle,
+  Download,
+  LogOut,
+  MessageSquare,
+  BookOpen,
+  Sparkles,
+  ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -32,6 +40,8 @@ import {
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { authUtils } from "@/lib/auth";
+import { useAuth } from "@/lib/use-auth";
+import { Badge } from "../ui/badge";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -61,6 +71,18 @@ ListItem.displayName = "ListItem";
 
 export function AppHeader() {
   const router = useRouter();
+  const { user, logout } = useAuth();
+
+  const getInitials = (name: string) => {
+    return (
+      name
+        ?.split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2) || "U"
+    );
+  };
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -220,21 +242,177 @@ export function AppHeader() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://picsum.photos/40/40?grayscale&random=99" />
-                <AvatarFallback>U</AvatarFallback>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full relative hover:ring-2 hover:ring-primary/20 transition-all"
+            >
+              <Avatar className="h-9 w-9 border-2 border-primary/10">
+                <AvatarImage
+                  src="https://picsum.photos/40/40?grayscale&random=99"
+                  alt={user?.fullName || "User"}
+                />
+                <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold">
+                  {user ? getInitials(user.fullName) : "U"}
+                </AvatarFallback>
               </Avatar>
+              <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-background" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent align="end" className="w-72">
+            {/* User Profile Header */}
+            <div className="flex items-start gap-3 p-3 pb-3 border-b">
+              <Avatar className="h-12 w-12 border-2 border-primary/20">
+                <AvatarImage
+                  src="https://picsum.photos/40/40?grayscale&random=99"
+                  alt={user?.fullName || "User"}
+                />
+                <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold text-lg">
+                  {user ? getInitials(user.fullName) : "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-sm truncate">
+                  {user?.fullName || "User"}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.email || "user@example.com"}
+                </p>
+                <Badge
+                  variant="secondary"
+                  className="mt-1.5 text-xs font-normal"
+                >
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  Free Plan
+                </Badge>
+              </div>
+            </div>
+
+            {/* Main Menu Items */}
+            <div className="py-1.5">
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/dashboard"
+                  className="cursor-pointer flex items-center gap-3 px-3 py-2"
+                >
+                  <div className="flex items-center justify-center h-8 w-8 rounded-md bg-primary/10">
+                    <LayoutDashboard className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">Dashboard</p>
+                    <p className="text-xs text-muted-foreground">
+                      View your overview
+                    </p>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/dashboard"
+                  className="cursor-pointer flex items-center gap-3 px-3 py-2"
+                >
+                  <div className="flex items-center justify-center h-8 w-8 rounded-md bg-blue-500/10">
+                    <UserCircle className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">Profile Settings</p>
+                    <p className="text-xs text-muted-foreground">
+                      Manage your account
+                    </p>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            </div>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </DropdownMenuItem>
+
+            {/* Quick Access Section */}
+            <div className="py-1.5">
+              <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-1">
+                Quick Access
+              </DropdownMenuLabel>
+
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/assistant"
+                  className="cursor-pointer flex items-center gap-3 px-3 py-2"
+                >
+                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">AI Assistant</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/forum"
+                  className="cursor-pointer flex items-center gap-3 px-3 py-2"
+                >
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Community Forum</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/legal-library"
+                  className="cursor-pointer flex items-center gap-3 px-3 py-2"
+                >
+                  <BookOpen className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Legal Library</span>
+                </Link>
+              </DropdownMenuItem>
+            </div>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+
+            {/* Support Section */}
+            <div className="py-1.5">
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/help"
+                  className="cursor-pointer flex items-center gap-3 px-3 py-2"
+                >
+                  <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Help & Support</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                onClick={() => {
+                  const data = authUtils.exportUserData();
+                  if (data) {
+                    const blob = new Blob([data], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `legalsahayak-data-${new Date().toISOString().split("T")[0]}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                  }
+                }}
+                className="cursor-pointer flex items-center gap-3 px-3 py-2"
+              >
+                <Download className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">Download My Data</span>
+              </DropdownMenuItem>
+            </div>
+
+            <DropdownMenuSeparator />
+
+            {/* Logout */}
+            <div className="py-1.5">
+              <DropdownMenuItem
+                onClick={handleLogout}
+                className="cursor-pointer flex items-center gap-3 px-3 py-2 text-destructive focus:text-destructive focus:bg-destructive/10"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="text-sm font-medium">Log Out</span>
+              </DropdownMenuItem>
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -242,7 +420,7 @@ export function AppHeader() {
   );
 
   function handleLogout() {
-    authUtils.logout();
+    logout();
     router.push("/signin");
   }
 }

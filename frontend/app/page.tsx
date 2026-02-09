@@ -36,6 +36,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import Footer from "@/components/layout/footer";
 
 const categoryIcons = {
   "Property & Real Estate": HomeIcon,
@@ -54,214 +55,48 @@ const FeatureCard = ({
     icon: React.ComponentType<{ className?: string }>;
     description: string;
     span: string;
-    visual: React.ReactNode;
   };
 }) => (
   <Card
     key={feature.title}
-    className={`p-8 shadow-medium hover:shadow-heavy transition-all duration-300 hover:scale-105 hover:-translate-y-2 flex flex-col relative overflow-hidden ${feature.span}`}
+    className={`p-4 shadow-medium hover:shadow-heavy transition-all duration-300 hover:scale-105 hover:-translate-y-2 flex flex-col ${feature.span}`}
   >
-    <div className="relative z-10">
-      <div className="p-4 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-4">
-        <feature.icon className="h-10 w-10 text-accent" />
-      </div>
-      <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
-      <p className="text-muted-foreground flex-1 mb-6">{feature.description}</p>
+    <div className="p-3 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-2">
+      <feature.icon className="h-10 w-10 text-accent" />
     </div>
-    <div className="absolute -right-1/4 -bottom-1/4 opacity-15 z-0">
-      {feature.visual}
-    </div>
+    <h3 className="text-2xl font-bold mb-1">{feature.title}</h3>
+    <p className="text-muted-foreground flex-1">{feature.description}</p>
   </Card>
 );
 
 const featureCards = [
   {
-    title: "Demographic Intelligence",
+    title: "Personalized for You",
     icon: UserCheck,
     description:
-      "AI that understands YOUR specific situation, state, and background to find laws relevant to you.",
+      "Smart AI adapts to your location, demographics, and unique circumstances. Get legal insights that actually apply to YOUR situation—not generic answers.",
     span: "md:col-span-1",
-    visual: (
-      <svg
-        width="250"
-        height="250"
-        viewBox="0 0 250 250"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle cx="125" cy="125" r="100" fill="url(#paint_demo_1)" />
-        <path
-          d="M125 25C179.827 25 225 69.8274 225 125C225 179.827 179.827 225 125 225C70.1726 225 25 179.827 25 125C25 98.4233 35.4745 74.5204 52.2766 57.2917"
-          stroke="white"
-          strokeOpacity="0.2"
-          strokeWidth="2"
-        />
-        <defs>
-          <radialGradient
-            id="paint_demo_1"
-            cx="0"
-            cy="0"
-            r="1"
-            gradientUnits="userSpaceOnUse"
-            gradientTransform="translate(125 125) rotate(90) scale(125)"
-          >
-            <stop stopColor="hsl(var(--accent))" />
-            <stop
-              offset="1"
-              stopColor="hsl(var(--primary))"
-              stopOpacity="0.5"
-            />
-          </radialGradient>
-        </defs>
-      </svg>
-    ),
   },
   {
-    title: "Multi-Agent AI System",
+    title: "Advanced RAG System",
     icon: Zap,
     description:
-      "A team of expert AI agents collaborates on your case for faster, more accurate reasoning.",
+      "Retrieval-Augmented Generation pulls from massive legal databases to ground every answer in real laws, regulations, and case precedents. Pure intelligence, no hallucination.",
     span: "md:col-span-1",
-    visual: (
-      <svg
-        width="200"
-        height="200"
-        viewBox="0 0 200 200"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M100 0L122.451 45.4955L170.711 54.2891L135.355 94.5045L144.902 143.211L100 120L55.0983 143.211L64.6447 94.5045L29.2893 54.2891L77.5487 45.4955L100 0Z"
-          fill="url(#paint0_linear_1_1)"
-        />
-        <defs>
-          <linearGradient
-            id="paint0_linear_1_1"
-            x1="100"
-            y1="0"
-            x2="100"
-            y2="143.211"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="hsl(var(--accent))" />
-            <stop offset="1" stopColor="hsl(var(--primary))" />
-          </linearGradient>
-        </defs>
-      </svg>
-    ),
   },
   {
-    title: "Community Intelligence",
-    icon: Users2,
-    description:
-      "Our AI learns from 50,000+ success stories to find solutions that work in the real world.",
-    span: "md:col-span-1",
-    visual: (
-      <svg
-        width="200"
-        height="200"
-        viewBox="0 0 200 200"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="100"
-          cy="100"
-          r="80"
-          stroke="url(#paint_circle_1)"
-          strokeWidth="4"
-        />
-        <circle
-          cx="100"
-          cy="100"
-          r="60"
-          stroke="url(#paint_circle_2)"
-          strokeWidth="4"
-          strokeDasharray="4 4"
-        />
-        <defs>
-          <linearGradient
-            id="paint_circle_1"
-            x1="20"
-            y1="100"
-            x2="180"
-            y2="100"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="hsl(var(--accent))" />
-            <stop offset="1" stopColor="hsl(var(--primary))" />
-          </linearGradient>
-          <linearGradient
-            id="paint_circle_2"
-            x1="40"
-            y1="100"
-            x2="160"
-            y2="100"
-            gradientUnits="userSpaceOnUse"
-          >
-            <stop stopColor="hsl(var(--primary))" />
-            <stop offset="1" stopColor="#FF8F00" />
-          </linearGradient>
-        </defs>
-      </svg>
-    ),
-  },
-  {
-    title: "Explainable AI",
+    title: "Transparent & Explainable",
     icon: Search,
     description:
-      "We show you the exact laws and case histories behind our recommendations, so you can trust the answers.",
+      "No mysterious answers. We show you the exact laws, articles, and reasoning behind every recommendation. Build confidence by understanding the 'why'.",
     span: "md:col-span-1",
-    visual: (
-      <svg
-        width="400"
-        height="200"
-        viewBox="0 0 400 200"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full"
-      >
-        <rect
-          x="50"
-          y="80"
-          width="40"
-          height="40"
-          rx="20"
-          fill="hsl(var(--accent))"
-          fillOpacity="0.3"
-        />
-        <path
-          d="M100 100H150"
-          stroke="hsl(var(--accent))"
-          strokeWidth="2"
-          strokeDasharray="4 4"
-        />
-        <rect
-          x="160"
-          y="80"
-          width="40"
-          height="40"
-          rx="8"
-          fill="hsl(var(--primary))"
-          fillOpacity="0.3"
-        />
-        <path
-          d="M210 100H260"
-          stroke="hsl(var(--primary))"
-          strokeWidth="2"
-          strokeDasharray="4 4"
-        />
-        <rect
-          x="270"
-          y="80"
-          width="80"
-          height="40"
-          rx="8"
-          fill="hsl(var(--primary))"
-          fillOpacity="0.5"
-        />
-      </svg>
-    ),
+  },
+  {
+    title: "Broader Coverage",
+    icon: Users2,
+    description:
+      "From employment disputes to family law, property rights to consumer protection. We cover diverse legal domains so you're always prepared.",
+    span: "md:col-span-1",
   },
 ];
 
@@ -327,12 +162,12 @@ export default function Home() {
                 <div className="space-y-4">
                   <h1 className="text-5xl font-bold tracking-headings sm:text-6xl xl:text-7xl/none">
                     <span className="gradient-text">
-                      Your Rights, Your Voice, Your Justice
+                      AI-Powered Legal Guidance
                     </span>
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Free AI-powered legal guidance for every Indian citizen -
-                    from village to city.
+                    Get accurate legal answers backed by real laws and
+                    regulations—free, instant, and in your language.
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 min-[400px]:flex-row">
@@ -351,8 +186,8 @@ export default function Home() {
                     size="lg"
                     className="rounded-button tracking-buttons text-lg px-8 py-6 border-2 border-primary text-primary transition-transform hover:scale-105 hover:bg-primary/5"
                   >
-                    <Link href="/forum" prefetch={false}>
-                      Browse Community Stories
+                    <Link href="#how-it-works" prefetch={false}>
+                      How It Works
                     </Link>
                   </Button>
                 </div>
@@ -376,25 +211,27 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 text-center">
               <div className="space-y-1">
-                <p className="text-4xl font-bold gradient-text">50,000+</p>
+                <p className="text-4xl font-bold gradient-text">1,000+</p>
                 <p className="text-muted-foreground font-medium">
-                  Cases Resolved
+                  Legal Resources Indexed
+                </p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-4xl font-bold gradient-text">&lt;5 min</p>
+                <p className="text-muted-foreground font-medium">
+                  Average Response Time
                 </p>
               </div>
               <div className="space-y-1">
                 <p className="text-4xl font-bold gradient-text">12+</p>
-                <p className="text-muted-foreground font-medium">Languages</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-4xl font-bold gradient-text">100%</p>
                 <p className="text-muted-foreground font-medium">
-                  Free for All Citizens
+                  Languages Supported
                 </p>
               </div>
               <div className="space-y-1">
-                <p className="text-4xl font-bold gradient-text">100+</p>
+                <p className="text-4xl font-bold gradient-text">24/7</p>
                 <p className="text-muted-foreground font-medium">
-                  Villages Trust Us
+                  Always Available & Free
                 </p>
               </div>
             </div>
@@ -402,7 +239,7 @@ export default function Home() {
         </section>
 
         {/* How it works */}
-        <section className="w-full py-16 md:py-28 lg:py-36">
+        <section id="how-it-works" className="w-full py-16 md:py-28 lg:py-36">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
               <div className="inline-block rounded-lg bg-secondary px-4 py-1.5 text-sm font-medium">
@@ -559,55 +396,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-card border-t">
-        <div className="container grid grid-cols-2 md:grid-cols-4 gap-8 py-12 px-4 md:px-6">
-          <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
-            <nav className="flex flex-col gap-2 text-sm text-muted-foreground">
-              <Link href="#" className="hover:text-primary">
-                About Us
-              </Link>
-              <Link href="#" className="hover:text-primary">
-                How It Works
-              </Link>
-              <Link href="#" className="hover:text-primary">
-                Legal Disclaimer
-              </Link>
-              <Link href="#" className="hover:text-primary">
-                Privacy Policy
-              </Link>
-            </nav>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-4">Contact</h3>
-            <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-              <p>help@legalsahayak.in</p>
-              <p>24/7 Helpline: 1800-123-4567</p>
-            </div>
-          </div>
-          <div className="col-span-2 md:col-span-2">
-            <h3 className="font-semibold mb-4">Backed By</h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Legal Aid Society of India
-            </p>
-            <h3 className="font-semibold mb-4">App Coming Soon</h3>
-            <div className="flex gap-4">
-              <p className="text-sm text-muted-foreground">
-                [Play Store Badge]
-              </p>
-              <p className="text-sm text-muted-foreground">[App Store Badge]</p>
-            </div>
-          </div>
-        </div>
-        <div className="border-t py-6">
-          <div className="container flex flex-col md:flex-row justify-between items-center text-center text-sm text-muted-foreground px-4 md:px-6">
-            <p>&copy; 2024 LegalSahayak. All rights reserved.</p>
-            <p className="mt-4 md:mt-0">
-              This is not a substitute for advice from a licensed professional.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
