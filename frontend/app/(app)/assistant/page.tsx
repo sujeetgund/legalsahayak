@@ -226,7 +226,7 @@ export default function AssistantPage() {
                 </CardDescription>
               </div>
               <Button asChild className="w-full mt-4 rounded-button">
-                <Link href="/legal-library">
+                <Link href="/library">
                   {t("assistant", "goToLibrary")}{" "}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

@@ -24,6 +24,7 @@ import {
   BookOpen,
   Sparkles,
   ChevronRight,
+  BookText,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -137,13 +138,13 @@ export function AppHeader() {
                       <Users className="h-4 w-4" />
                       {t("header", "community")}
                     </Link>
-                    {/* <Link
-                      href="/legal-library"
+                    <Link
+                      href="/library"
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                     >
                       <BookText className="h-4 w-4" />
                       Legal Library
-                    </Link> */}
+                    </Link>
                     <Link
                       href="/dashboard"
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -185,16 +186,16 @@ export function AppHeader() {
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          {/* <NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuLink asChild>
               <Link
-                href="/legal-library"
+                href="/library"
                 className={navigationMenuTriggerStyle()}
               >
                 Legal Library
               </Link>
             </NavigationMenuLink>
-          </NavigationMenuItem> */}
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
 
@@ -374,7 +375,7 @@ export function AppHeader() {
 
               <DropdownMenuItem asChild>
                 <Link
-                  href="/legal-library"
+                  href="/library"
                   className="cursor-pointer flex items-center gap-3 px-3 py-2"
                 >
                   <BookOpen className="h-4 w-4 text-muted-foreground" />

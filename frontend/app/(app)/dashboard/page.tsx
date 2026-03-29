@@ -166,7 +166,7 @@ export default function DashboardPage() {
       icon: BookOpen,
       title: t("dashboard", "legalResources"),
       description: t("dashboard", "legalResourcesDesc"),
-      href: "/legal-library",
+      href: "/library",
       color: "text-green-600",
     },
   ];

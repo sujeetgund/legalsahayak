@@ -1,12 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import {
-  BookText,
-  Gavel,
-  LayoutDashboard,
-  Users,
-} from "lucide-react";
+import { BookText, Gavel, LayoutDashboard, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,7 +9,7 @@ const navItems = [
   { href: "/assistant", label: "AI Assistant", icon: Gavel },
   { href: "/forum", label: "Communities", icon: Users },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/legal-library", label: "Library", icon: BookText },
+  { href: "/library", label: "Library", icon: BookText },
 ];
 
 export function AppSidebar({
