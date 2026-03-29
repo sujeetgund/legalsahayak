@@ -27,11 +27,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Sparkles, Scale, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 import { educationLevels, indianStates, occupations } from "@/lib/data";
 import { authUtils } from "@/lib/auth";
 import { toast } from "sonner";
+import { LanguageToggle } from "@/components/language-toggle";
+import { useLanguage } from "@/components/providers/language-provider";
 
 const profileFormSchema = z.object({
   age: z.coerce
@@ -52,9 +54,10 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
+    resolver: zodResolver(profileFormSchema) as Resolver<ProfileFormValues>,
     defaultValues: {
       age: 18,
       gender: "",
@@ -99,6 +102,9 @@ export default function OnboardingPage() {
 
       {/* Main Container */}
       <div className="w-full max-w-5xl mx-auto z-10">
+        <div className="flex justify-end mb-4">
+          <LanguageToggle />
+        </div>
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
           {/* Left Side - Branding & Info */}
           <div className="lg:w-96 flex-shrink-0 text-white">
@@ -114,7 +120,7 @@ export default function OnboardingPage() {
                       LegalSahayak
                     </h1>
                     <p className="text-sm text-white/70">
-                      Your Legal Companion
+                      {t("onboarding", "companion")}
                     </p>
                   </div>
                 </div>
@@ -124,11 +130,10 @@ export default function OnboardingPage() {
               <div className="space-y-6">
                 <div>
                   <h2 className="text-2xl font-bold mb-3 text-white">
-                    Welcome! Let's Get Started
+                    {t("onboarding", "welcomeTitle")}
                   </h2>
                   <p className="text-white/80 leading-relaxed">
-                    Help us understand you better so we can provide personalized
-                    legal guidance tailored to your needs.
+                    {t("onboarding", "welcomeDescription")}
                   </p>
                 </div>
 
@@ -140,10 +145,10 @@ export default function OnboardingPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-white mb-1">
-                        AI-Powered Guidance
+                        {t("onboarding", "aiGuidance")}
                       </h3>
                       <p className="text-sm text-white/70">
-                        Get instant legal advice powered by advanced AI
+                        {t("onboarding", "aiGuidanceDesc")}
                       </p>
                     </div>
                   </div>
@@ -154,10 +159,10 @@ export default function OnboardingPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-white mb-1">
-                        For Everyone
+                        {t("onboarding", "forEveryone")}
                       </h3>
                       <p className="text-sm text-white/70">
-                        Accessible legal help for all Indians
+                        {t("onboarding", "forEveryoneDesc")}
                       </p>
                     </div>
                   </div>
@@ -168,10 +173,10 @@ export default function OnboardingPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-white mb-1">
-                        Know Your Rights
+                        {t("onboarding", "knowRights")}
                       </h3>
                       <p className="text-sm text-white/70">
-                        Understand and exercise your legal rights
+                        {t("onboarding", "knowRightsDesc")}
                       </p>
                     </div>
                   </div>
@@ -182,10 +187,9 @@ export default function OnboardingPage() {
               <div className="mt-8 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
                 <p className="text-xs text-white/80 leading-relaxed">
                   <span className="font-semibold text-[#FFB800]">
-                    Privacy First:
+                    {t("onboarding", "privacyFirst")}
                   </span>{" "}
-                  Your information is secure and will only be used to
-                  personalize your experience. We never share your data.
+                  {t("onboarding", "privacyDesc")}
                 </p>
               </div>
             </div>
@@ -196,11 +200,10 @@ export default function OnboardingPage() {
             <Card className="shadow-2xl border-none bg-white/95 backdrop-blur-md overflow-hidden">
               <CardHeader className="p-6 lg:p-8 bg-gradient-to-r from-white to-[#FFB800]/5 border-b">
                 <CardTitle className="text-2xl lg:text-3xl text-[#1B365D]">
-                  Tell Us About Yourself
+                  {t("onboarding", "tellUs")}
                 </CardTitle>
                 <CardDescription className="text-base">
-                  This helps us provide relevant legal information for your
-                  situation
+                  {t("onboarding", "tellUsDesc")}
                 </CardDescription>
               </CardHeader>
 
@@ -218,12 +221,13 @@ export default function OnboardingPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-base font-semibold text-[#1B365D]">
-                              Age <span className="text-red-500">*</span>
+                              {t("onboarding", "age")}{" "}
+                              <span className="text-red-500">*</span>
                             </FormLabel>
                             <FormControl>
                               <Input
                                 type="number"
-                                placeholder="Enter your age"
+                                placeholder={t("onboarding", "age")}
                                 className="h-11 border-gray-300 focus:border-[#FFB800] focus:ring-[#FFB800]"
                                 {...field}
                                 onChange={(event) =>
@@ -246,7 +250,8 @@ export default function OnboardingPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-base font-semibold text-[#1B365D]">
-                              Gender <span className="text-red-500">*</span>
+                              {t("onboarding", "gender")}{" "}
+                              <span className="text-red-500">*</span>
                             </FormLabel>
                             <Select
                               onValueChange={field.onChange}
@@ -254,15 +259,26 @@ export default function OnboardingPage() {
                             >
                               <FormControl>
                                 <SelectTrigger className="h-11 border-gray-300 focus:border-[#FFB800] focus:ring-[#FFB800]">
-                                  <SelectValue placeholder="Select gender" />
+                                  <SelectValue
+                                    placeholder={t(
+                                      "onboarding",
+                                      "selectGender",
+                                    )}
+                                  />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="male">Male</SelectItem>
-                                <SelectItem value="female">Female</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
+                                <SelectItem value="male">
+                                  {t("onboarding", "male")}
+                                </SelectItem>
+                                <SelectItem value="female">
+                                  {t("onboarding", "female")}
+                                </SelectItem>
+                                <SelectItem value="other">
+                                  {t("onboarding", "other")}
+                                </SelectItem>
                                 <SelectItem value="prefer_not_to_say">
-                                  Prefer not to say
+                                  {t("onboarding", "preferNot")}
                                 </SelectItem>
                               </SelectContent>
                             </Select>
@@ -279,7 +295,8 @@ export default function OnboardingPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-base font-semibold text-[#1B365D]">
-                            State/Region <span className="text-red-500">*</span>
+                            {t("onboarding", "stateRegion")}{" "}
+                            <span className="text-red-500">*</span>
                           </FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -287,7 +304,9 @@ export default function OnboardingPage() {
                           >
                             <FormControl>
                               <SelectTrigger className="h-11 border-gray-300 focus:border-[#FFB800] focus:ring-[#FFB800]">
-                                <SelectValue placeholder="Select your state" />
+                                <SelectValue
+                                  placeholder={t("onboarding", "selectState")}
+                                />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -310,7 +329,7 @@ export default function OnboardingPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-base font-semibold text-[#1B365D]">
-                            Education Level{" "}
+                            {t("onboarding", "education")}{" "}
                             <span className="text-red-500">*</span>
                           </FormLabel>
                           <Select
@@ -319,7 +338,12 @@ export default function OnboardingPage() {
                           >
                             <FormControl>
                               <SelectTrigger className="h-11 border-gray-300 focus:border-[#FFB800] focus:ring-[#FFB800]">
-                                <SelectValue placeholder="Select education level" />
+                                <SelectValue
+                                  placeholder={t(
+                                    "onboarding",
+                                    "selectEducation",
+                                  )}
+                                />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -345,7 +369,8 @@ export default function OnboardingPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-base font-semibold text-[#1B365D]">
-                            Occupation <span className="text-red-500">*</span>
+                            {t("onboarding", "occupation")}{" "}
+                            <span className="text-red-500">*</span>
                           </FormLabel>
                           <Select
                             onValueChange={field.onChange}
@@ -353,7 +378,12 @@ export default function OnboardingPage() {
                           >
                             <FormControl>
                               <SelectTrigger className="h-11 border-gray-300 focus:border-[#FFB800] focus:ring-[#FFB800]">
-                                <SelectValue placeholder="Select your occupation" />
+                                <SelectValue
+                                  placeholder={t(
+                                    "onboarding",
+                                    "selectOccupation",
+                                  )}
+                                />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -376,14 +406,13 @@ export default function OnboardingPage() {
                         size="lg"
                         className="w-full h-12 text-base font-semibold bg-gradient-to-r from-[#FFB800] to-[#FF8F00] hover:from-[#FF8F00] hover:to-[#FFB800] text-[#1B365D] shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                       >
-                        Continue to LegalSahayak
+                        {t("onboarding", "continueButton")}
                         <Sparkles className="w-5 h-5 ml-2" />
                       </Button>
                     </div>
 
                     <p className="text-xs text-gray-500 text-center pt-2">
-                      By continuing, you agree to our Terms of Service and
-                      Privacy Policy
+                      {t("onboarding", "termsNote")}
                     </p>
                   </form>
                 </Form>

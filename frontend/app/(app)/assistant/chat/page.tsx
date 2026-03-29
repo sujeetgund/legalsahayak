@@ -9,7 +9,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -23,10 +23,10 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
-import Link from "next/link";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useLanguage } from "@/components/providers/language-provider";
 
 type Demographics = {
   age: number;
@@ -55,7 +55,13 @@ type Message = {
   response?: ApiResponse;
 };
 
-const AssistantResponse = ({ message }: { message: Message }) => {
+const AssistantResponse = ({
+  message,
+  t,
+}: {
+  message: Message;
+  t: ReturnType<typeof useLanguage>["t"];
+}) => {
   const response = message.response;
 
   if (!response) return null;
@@ -129,13 +135,13 @@ const AssistantResponse = ({ message }: { message: Message }) => {
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <Badge variant="outline">Jurisdiction: India</Badge>
+              <Badge variant="outline">{t("assistant", "jurisdiction")}</Badge>
               <Badge className="bg-accent text-accent-foreground">
-                Confidence: {confidencePercent}%
+                {t("assistant", "confidence")}: {confidencePercent}%
               </Badge>
             </div>
             <span className="text-xs text-muted-foreground">
-              AI-generated guidance
+              {t("assistant", "aiGeneratedGuidance")}
             </span>
           </div>
           <div className="h-2 w-full rounded-full bg-muted">
@@ -149,13 +155,13 @@ const AssistantResponse = ({ message }: { message: Message }) => {
       <Tabs defaultValue="answer" className="w-full p-4">
         <TabsList className="grid w-full grid-cols-3 rounded-full bg-muted/70 p-1">
           <TabsTrigger value="answer" className="rounded-full">
-            Answer
+            {t("assistant", "answerTab")}
           </TabsTrigger>
           <TabsTrigger value="legal" className="rounded-full">
-            Legal References
+            {t("assistant", "legalReferencesTab")}
           </TabsTrigger>
           <TabsTrigger value="plan" className="rounded-full">
-            Action Plan
+            {t("assistant", "actionPlanTab")}
           </TabsTrigger>
         </TabsList>
         <TabsContent
@@ -174,7 +180,7 @@ const AssistantResponse = ({ message }: { message: Message }) => {
         >
           {response.legal_references.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No legal references provided.
+              {t("assistant", "noLegalReferences")}
             </p>
           ) : (
             <ul className="list-disc pl-5 space-y-2 text-sm text-foreground">
@@ -190,7 +196,7 @@ const AssistantResponse = ({ message }: { message: Message }) => {
         >
           {response.action_plan.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No action plan provided.
+              {t("assistant", "noActionPlan")}
             </p>
           ) : (
             <Accordion type="single" collapsible className="w-full space-y-2">
@@ -231,10 +237,11 @@ export default function AssistantChatPage() {
   const [history, setHistory] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isPending, setIsPending] = useState(false);
+  const { t } = useLanguage();
   const quickPrompts = [
-    "I work on daily wages. What are my rights?",
-    "How do I file a consumer complaint?",
-    "What documents do I need for a rental agreement?",
+    t("assistant", "quickPrompt1"),
+    t("assistant", "quickPrompt2"),
+    t("assistant", "quickPrompt3"),
   ];
 
   // Load initial conversation from sessionStorage on mount
@@ -312,7 +319,7 @@ export default function AssistantChatPage() {
       console.error("Failed to get response:", error);
       addMessage({
         role: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
+        content: t("assistant", "genericError"),
       });
     } finally {
       setIsPending(false);
@@ -339,7 +346,7 @@ export default function AssistantChatPage() {
                   LegalSahayak
                 </p>
                 <h1 className="text-xl font-bold text-foreground">
-                  AI Legal Assistant
+                  {t("assistant", "title")}
                 </h1>
               </div>
             </div>
@@ -361,11 +368,10 @@ export default function AssistantChatPage() {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-foreground">
-                        Ask your first question
+                        {t("assistant", "askFirstQuestion")}
                       </h2>
                       <p className="text-base text-muted-foreground mt-1">
-                        Share your situation. We will tailor the answer to your
-                        profile.
+                        {t("assistant", "firstQuestionHint")}
                       </p>
                     </div>
                   </div>
@@ -405,7 +411,7 @@ export default function AssistantChatPage() {
                 >
                   {message.response ? (
                     <div className="w-full">
-                      <AssistantResponse message={message} />
+                      <AssistantResponse message={message} t={t} />
                     </div>
                   ) : (
                     <p className="bg-primary text-primary-foreground p-5 rounded-2xl shadow-lg whitespace-pre-wrap text-base leading-relaxed">
@@ -451,7 +457,7 @@ export default function AssistantChatPage() {
                       ref={inputRef}
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
-                      placeholder="Describe your legal situation in detail. Include dates, locations, and any relevant context..."
+                      placeholder={t("assistant", "detailedInputPlaceholder")}
                       disabled={isPending}
                       className="min-h-[100px] text-base leading-relaxed rounded-xl shadow-none border-0 focus-visible:ring-0 resize-none bg-transparent px-2 py-2"
                       onKeyDown={(e) => {
@@ -480,10 +486,11 @@ export default function AssistantChatPage() {
               </div>
               <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
                 <span className="font-medium">
-                  💡 Tip: Provide context and location for more accurate
-                  guidance.
+                  💡 {t("assistant", "tipText")}
                 </span>
-                <span className="font-medium">Powered by LegalSahayak AI</span>
+                <span className="font-medium">
+                  {t("assistant", "poweredBy")}
+                </span>
               </div>
             </form>
           </div>

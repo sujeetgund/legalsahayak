@@ -83,6 +83,16 @@ export function useAuth() {
     return authUtils.exportUserData();
   }, []);
 
+  const updatePreferredLanguage = useCallback((language: "en" | "hi") => {
+    const success = authUtils.updatePreferredLanguage(language);
+    if (success) {
+      const updatedUser = authUtils.getCurrentUser();
+      setUser(updatedUser);
+      return true;
+    }
+    return false;
+  }, []);
+
   return {
     user,
     isLoading,
@@ -92,6 +102,7 @@ export function useAuth() {
     logout,
     updateProfile,
     updateUserInfo,
+    updatePreferredLanguage,
     deleteAccount,
     exportData,
   };

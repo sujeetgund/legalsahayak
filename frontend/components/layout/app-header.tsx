@@ -42,6 +42,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { authUtils } from "@/lib/auth";
 import { useAuth } from "@/lib/use-auth";
 import { Badge } from "../ui/badge";
+import { LanguageToggle } from "@/components/language-toggle";
+import { useLanguage } from "@/components/providers/language-provider";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -72,6 +74,7 @@ ListItem.displayName = "ListItem";
 export function AppHeader() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   const getInitials = (name: string) => {
     return (
@@ -101,7 +104,7 @@ export function AppHeader() {
             <SheetTrigger asChild>
               <Button variant="outline" size="icon">
                 <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
+                <span className="sr-only">{t("header", "toggleMenu")}</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
@@ -125,14 +128,14 @@ export function AppHeader() {
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                     >
                       <Gavel className="h-4 w-4" />
-                      AI Assistant
+                      {t("header", "aiAssistant")}
                     </Link>
                     <Link
                       href="/forum"
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                     >
                       <Users className="h-4 w-4" />
-                      Community
+                      {t("header", "community")}
                     </Link>
                     {/* <Link
                       href="/legal-library"
@@ -146,7 +149,7 @@ export function AppHeader() {
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                     >
                       <LayoutDashboard className="h-4 w-4" />
-                      Dashboard
+                      {t("header", "dashboard")}
                     </Link>
                   </nav>
                 </div>
@@ -171,14 +174,14 @@ export function AppHeader() {
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
               <Link href="/assistant" className={navigationMenuTriggerStyle()}>
-                AI Assistant
+                {t("header", "aiAssistant")}
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
               <Link href="/forum" className={navigationMenuTriggerStyle()}>
-                Community
+                {t("header", "community")}
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -200,10 +203,12 @@ export function AppHeader() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             name="search"
-            placeholder="Search the platform..."
+            placeholder={t("header", "searchPlaceholder")}
             className="pl-10"
           />
         </form>
+
+        <LanguageToggle compact className="hidden sm:inline-flex" />
 
         {/* <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -250,7 +255,7 @@ export function AppHeader() {
               <Avatar className="h-9 w-9 border-2 border-primary/10">
                 <AvatarImage
                   src="https://picsum.photos/40/40?grayscale&random=99"
-                  alt={user?.fullName || "User"}
+                  alt={user?.fullName || t("header", "unknownUser")}
                 />
                 <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold">
                   {user ? getInitials(user.fullName) : "U"}
@@ -265,7 +270,7 @@ export function AppHeader() {
               <Avatar className="h-12 w-12 border-2 border-primary/20">
                 <AvatarImage
                   src="https://picsum.photos/40/40?grayscale&random=99"
-                  alt={user?.fullName || "User"}
+                  alt={user?.fullName || t("header", "unknownUser")}
                 />
                 <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-semibold text-lg">
                   {user ? getInitials(user.fullName) : "U"}
@@ -273,7 +278,7 @@ export function AppHeader() {
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-sm truncate">
-                  {user?.fullName || "User"}
+                  {user?.fullName || t("header", "unknownUser")}
                 </p>
                 <p className="text-xs text-muted-foreground truncate">
                   {user?.email || "user@example.com"}
@@ -283,9 +288,16 @@ export function AppHeader() {
                   className="mt-1.5 text-xs font-normal"
                 >
                   <Sparkles className="h-3 w-3 mr-1" />
-                  Free Plan
+                  {t("header", "freePlan")}
                 </Badge>
               </div>
+            </div>
+
+            <div className="px-3 py-2 border-b">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                {t("header", "languageLabel")}
+              </p>
+              <LanguageToggle className="w-full justify-center" />
             </div>
 
             {/* Main Menu Items */}
@@ -299,9 +311,11 @@ export function AppHeader() {
                     <LayoutDashboard className="h-4 w-4 text-primary" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-sm">Dashboard</p>
+                    <p className="font-medium text-sm">
+                      {t("header", "dashboard")}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      View your overview
+                      {t("header", "viewOverview")}
                     </p>
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -317,9 +331,11 @@ export function AppHeader() {
                     <UserCircle className="h-4 w-4 text-blue-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-sm">Profile Settings</p>
+                    <p className="font-medium text-sm">
+                      {t("header", "profileSettings")}
+                    </p>
                     <p className="text-xs text-muted-foreground">
-                      Manage your account
+                      {t("header", "manageAccount")}
                     </p>
                   </div>
                 </Link>
@@ -331,7 +347,7 @@ export function AppHeader() {
             {/* Quick Access Section */}
             <div className="py-1.5">
               <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-3 py-1">
-                Quick Access
+                {t("header", "quickAccess")}
               </DropdownMenuLabel>
 
               <DropdownMenuItem asChild>
@@ -340,7 +356,7 @@ export function AppHeader() {
                   className="cursor-pointer flex items-center gap-3 px-3 py-2"
                 >
                   <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">AI Assistant</span>
+                  <span className="text-sm">{t("header", "aiAssistant")}</span>
                 </Link>
               </DropdownMenuItem>
 
@@ -350,7 +366,9 @@ export function AppHeader() {
                   className="cursor-pointer flex items-center gap-3 px-3 py-2"
                 >
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Community Forum</span>
+                  <span className="text-sm">
+                    {t("header", "communityForum")}
+                  </span>
                 </Link>
               </DropdownMenuItem>
 
@@ -360,7 +378,7 @@ export function AppHeader() {
                   className="cursor-pointer flex items-center gap-3 px-3 py-2"
                 >
                   <BookOpen className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Legal Library</span>
+                  <span className="text-sm">{t("header", "legalLibrary")}</span>
                 </Link>
               </DropdownMenuItem>
             </div>
@@ -375,7 +393,7 @@ export function AppHeader() {
                   className="cursor-pointer flex items-center gap-3 px-3 py-2"
                 >
                   <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Help & Support</span>
+                  <span className="text-sm">{t("header", "helpSupport")}</span>
                 </Link>
               </DropdownMenuItem>
 
@@ -397,7 +415,7 @@ export function AppHeader() {
                 className="cursor-pointer flex items-center gap-3 px-3 py-2"
               >
                 <Download className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Download My Data</span>
+                <span className="text-sm">{t("header", "downloadData")}</span>
               </DropdownMenuItem>
             </div>
 
@@ -410,7 +428,9 @@ export function AppHeader() {
                 className="cursor-pointer flex items-center gap-3 px-3 py-2 text-destructive focus:text-destructive focus:bg-destructive/10"
               >
                 <LogOut className="h-4 w-4" />
-                <span className="text-sm font-medium">Log Out</span>
+                <span className="text-sm font-medium">
+                  {t("header", "logout")}
+                </span>
               </DropdownMenuItem>
             </div>
           </DropdownMenuContent>

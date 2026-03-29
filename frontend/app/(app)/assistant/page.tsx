@@ -8,6 +8,7 @@ import { ArrowRight, BookOpen, Loader2, Send, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { useLanguage } from "@/components/providers/language-provider";
 
 type Demographics = {
   age: number;
@@ -33,6 +34,7 @@ export default function AssistantPage() {
   const [input, setInput] = useState("");
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -100,7 +102,7 @@ export default function AssistantPage() {
         {
           id: `${Date.now()}-assistant`,
           role: "assistant" as const,
-          content: "Sorry, I encountered an error. Please try again.",
+          content: t("assistant", "genericError"),
         },
       ];
 
@@ -123,10 +125,10 @@ export default function AssistantPage() {
             <Loader2 className="h-12 w-12 animate-spin text-primary" />
             <div className="text-center">
               <h3 className="text-lg font-semibold">
-                Analyzing your question...
+                {t("assistant", "loadingTitle")}
               </h3>
               <p className="text-sm text-muted-foreground">
-                This may take a moment
+                {t("assistant", "loadingDesc")}
               </p>
             </div>
           </Card>
@@ -137,11 +139,10 @@ export default function AssistantPage() {
         <div className="container px-4 md:px-6 z-10">
           <div className="flex flex-col items-center justify-center space-y-6">
             <h1 className="text-5xl font-bold tracking-headings sm:text-6xl xl:text-7xl/none">
-              <span className="gradient-text">AI Legal Assistant</span>
+              <span className="gradient-text">{t("assistant", "title")}</span>
             </h1>
             <p className="max-w-[700px] text-muted-foreground md:text-xl">
-              Your confidential, AI-powered guide to understanding your rights.
-              Ask any legal question and get clear, actionable answers.
+              {t("assistant", "subtitle")}
             </p>
           </div>
           <div className="max-w-3xl mx-auto mt-12">
@@ -150,7 +151,7 @@ export default function AssistantPage() {
                 <Textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="My landlord won't return my security deposit..."
+                  placeholder={t("assistant", "inputPlaceholder")}
                   disabled={isPending}
                   className="pr-36 min-h-[80px] text-lg p-6 rounded-xl shadow-none border-0 focus-visible:ring-0 resize-none"
                   onKeyDown={(e) => {
@@ -185,11 +186,10 @@ export default function AssistantPage() {
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
             <h2 className="text-3xl font-bold tracking-headings sm:text-4xl">
-              Or, Explore Other Resources
+              {t("assistant", "resourcesTitle")}
             </h2>
             <p className="max-w-[900px] text-muted-foreground md:text-lg/relaxed">
-              Dive deeper into legal topics, learn from others, or browse
-              official documents.
+              {t("assistant", "resourcesSubtitle")}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -200,16 +200,16 @@ export default function AssistantPage() {
                   <Users className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-bold mb-2">
-                  Community Stories
+                  {t("assistant", "communityStories")}
                 </CardTitle>
                 <CardDescription className="mb-4 flex-1">
-                  Read real-life experiences from people who have faced similar
-                  legal issues.
+                  {t("assistant", "communityStoriesDesc")}
                 </CardDescription>
               </div>
               <Button asChild className="w-full mt-4 rounded-button">
                 <Link href="/forum">
-                  Browse Stories <ArrowRight className="ml-2 h-4 w-4" />
+                  {t("assistant", "browseStories")}{" "}
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </Card>
@@ -219,16 +219,16 @@ export default function AssistantPage() {
                   <BookOpen className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-bold mb-2">
-                  Explore Legal Topics
+                  {t("assistant", "exploreTopics")}
                 </CardTitle>
                 <CardDescription className="mb-4 flex-1">
-                  Browse our library of simplified legal acts, codes, and
-                  regulations.
+                  {t("assistant", "exploreTopicsDesc")}
                 </CardDescription>
               </div>
               <Button asChild className="w-full mt-4 rounded-button">
                 <Link href="/legal-library">
-                  Go to Library <ArrowRight className="ml-2 h-4 w-4" />
+                  {t("assistant", "goToLibrary")}{" "}
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </Card>

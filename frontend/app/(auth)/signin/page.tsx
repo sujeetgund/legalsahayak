@@ -26,6 +26,7 @@ import { z } from "zod";
 import { authUtils } from "@/lib/auth";
 import { toast } from "sonner";
 import { Scale } from "lucide-react";
+import { useLanguage } from "@/components/providers/language-provider";
 
 const signinSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -37,6 +38,7 @@ type SigninFormValues = z.infer<typeof signinSchema>;
 export default function SigninPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLanguage();
 
   const form = useForm<SigninFormValues>({
     resolver: zodResolver(signinSchema),
@@ -56,10 +58,10 @@ export default function SigninPage() {
         // Redirect to dashboard/assistant page
         router.push("/");
       } else {
-        toast.error("Invalid email or password. Please try again.");
+        toast.error("Invalid email or password.");
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
+      toast.error("An error occurred.");
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -78,16 +80,16 @@ export default function SigninPage() {
             </h1>
           </div>
           <p className="text-sm text-muted-foreground">
-            AI-Powered Legal Assistance
+            {t("auth", "tagline")}
           </p>
         </div>
 
         <Card className="border-border shadow-light">
           <CardHeader className="space-y-2">
-            <CardTitle className="font-headline">Welcome back</CardTitle>
-            <CardDescription>
-              Sign in to access your legal assistance dashboard
-            </CardDescription>
+            <CardTitle className="font-headline">
+              {t("auth", "welcomeBack")}
+            </CardTitle>
+            <CardDescription>{t("auth", "signinDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -100,7 +102,7 @@ export default function SigninPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{t("auth", "email")}</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="you@example.com"
@@ -119,7 +121,7 @@ export default function SigninPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{t("auth", "password")}</FormLabel>
                       <FormControl>
                         <Input
                           placeholder="••••••••"
@@ -140,13 +142,15 @@ export default function SigninPage() {
                       className="rounded"
                       disabled={isLoading}
                     />
-                    <span className="text-muted-foreground">Remember me</span>
+                    <span className="text-muted-foreground">
+                      {t("auth", "rememberMe")}
+                    </span>
                   </label>
                   <Link
                     href="#"
                     className="text-primary hover:underline font-medium"
                   >
-                    Forgot password?
+                    {t("auth", "forgotPassword")}
                   </Link>
                 </div>
 
@@ -155,20 +159,20 @@ export default function SigninPage() {
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Signing in..." : "Sign In"}
+                  {isLoading ? t("auth", "signingIn") : t("auth", "signIn")}
                 </Button>
               </form>
             </Form>
 
             <div className="mt-4 text-center text-sm">
               <span className="text-muted-foreground">
-                Don&apos;t have an account?{" "}
+                {t("auth", "noAccount")}{" "}
               </span>
               <Link
                 href="/signup"
                 className="text-primary font-medium hover:underline"
               >
-                Sign up
+                {t("auth", "signUp")}
               </Link>
             </div>
           </CardContent>
@@ -176,13 +180,13 @@ export default function SigninPage() {
 
         <div className="mt-6 text-center text-xs text-muted-foreground">
           <p>
-            By signing in, you agree to our{" "}
+            {t("auth", "bySignin")}{" "}
             <Link href="#" className="underline hover:text-foreground">
-              Terms of Service
+              {t("common", "termsOfService")}
             </Link>{" "}
             and{" "}
             <Link href="#" className="underline hover:text-foreground">
-              Privacy Policy
+              {t("common", "privacyPolicy")}
             </Link>
           </p>
         </div>

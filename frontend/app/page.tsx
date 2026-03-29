@@ -1,13 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Card } from "@/components/ui/card";
+import { LanguageToggle } from "@/components/language-toggle";
+import { useLanguage } from "@/components/providers/language-provider";
 
 import {
   Accordion,
@@ -19,7 +15,6 @@ import {
 import {
   MessageSquare,
   Users,
-  Globe,
   Scale,
   Phone,
   Brain,
@@ -38,69 +33,103 @@ import Link from "next/link";
 import Image from "next/image";
 import Footer from "@/components/layout/footer";
 
-const categoryIcons = {
-  "Property & Real Estate": HomeIcon,
-  "Consumer Complaints": ShoppingCart,
-  "Family Law": Users,
-  "Business & Contracts": Building,
-  "Labor & Employment": BriefcaseBusiness,
-  "Other Legal Issues": Scale,
-};
+const categoryCards = [
+  {
+    value: "Property & Real Estate",
+    labelKey: "categoryProperty",
+    icon: HomeIcon,
+  },
+  {
+    value: "Consumer Complaints",
+    labelKey: "categoryConsumer",
+    icon: ShoppingCart,
+  },
+  {
+    value: "Family Law",
+    labelKey: "categoryFamily",
+    icon: Users,
+  },
+  {
+    value: "Business & Contracts",
+    labelKey: "categoryBusiness",
+    icon: Building,
+  },
+  {
+    value: "Labor & Employment",
+    labelKey: "categoryLabor",
+    icon: BriefcaseBusiness,
+  },
+  {
+    value: "Other Legal Issues",
+    labelKey: "categoryOther",
+    icon: Scale,
+  },
+] as const;
 
 const FeatureCard = ({
   feature,
+  title,
+  description,
 }: {
   feature: {
-    title: string;
+    titleKey:
+      | "personalizedTitle"
+      | "ragTitle"
+      | "transparentTitle"
+      | "broaderTitle";
     icon: React.ComponentType<{ className?: string }>;
-    description: string;
+    descriptionKey:
+      | "personalizedDescription"
+      | "ragDescription"
+      | "transparentDescription"
+      | "broaderDescription";
     span: string;
   };
+  title: string;
+  description: string;
 }) => (
   <Card
-    key={feature.title}
+    key={feature.titleKey}
     className={`p-4 shadow-medium hover:shadow-heavy transition-all duration-300 hover:scale-105 hover:-translate-y-2 flex flex-col ${feature.span}`}
   >
     <div className="p-3 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-2">
       <feature.icon className="h-10 w-10 text-accent" />
     </div>
-    <h3 className="text-2xl font-bold mb-1">{feature.title}</h3>
-    <p className="text-muted-foreground flex-1">{feature.description}</p>
+    <h3 className="text-2xl font-bold mb-1">{title}</h3>
+    <p className="text-muted-foreground flex-1">{description}</p>
   </Card>
 );
 
 const featureCards = [
   {
-    title: "Personalized for You",
+    titleKey: "personalizedTitle",
     icon: UserCheck,
-    description:
-      "Smart AI adapts to your location, demographics, and unique circumstances. Get legal insights that actually apply to YOUR situation—not generic answers.",
+    descriptionKey: "personalizedDescription",
     span: "md:col-span-1",
   },
   {
-    title: "Advanced RAG System",
+    titleKey: "ragTitle",
     icon: Zap,
-    description:
-      "Retrieval-Augmented Generation pulls from massive legal databases to ground every answer in real laws, regulations, and case precedents. Pure intelligence, no hallucination.",
+    descriptionKey: "ragDescription",
     span: "md:col-span-1",
   },
   {
-    title: "Transparent & Explainable",
+    titleKey: "transparentTitle",
     icon: Search,
-    description:
-      "No mysterious answers. We show you the exact laws, articles, and reasoning behind every recommendation. Build confidence by understanding the 'why'.",
+    descriptionKey: "transparentDescription",
     span: "md:col-span-1",
   },
   {
-    title: "Broader Coverage",
+    titleKey: "broaderTitle",
     icon: Users2,
-    description:
-      "From employment disputes to family law, property rights to consumer protection. We cover diverse legal domains so you're always prepared.",
+    descriptionKey: "broaderDescription",
     span: "md:col-span-1",
   },
-];
+] as const;
 
 export default function Home() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Header */}
@@ -116,33 +145,14 @@ export default function Home() {
           </span>
         </Link>
         <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-full hover:bg-accent/10"
-              >
-                <Globe className="h-5 w-5 text-primary" />
-                <span className="sr-only">Switch language</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Language</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>English</DropdownMenuItem>
-              <DropdownMenuItem>हिन्दी</DropdownMenuItem>
-              <DropdownMenuItem>বাংলা</DropdownMenuItem>
-              <DropdownMenuItem>తెలుగు</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <LanguageToggle />
           <Button
             variant="outline"
             size="sm"
             className="rounded-button hidden sm:flex items-center gap-2 border-primary text-primary"
           >
             <Phone className="h-4 w-4" />
-            24/7 Legal Helpline
+            {t("home", "legalHelpline")}
           </Button>
         </div>
       </header>
@@ -162,12 +172,11 @@ export default function Home() {
                 <div className="space-y-4">
                   <h1 className="text-5xl font-bold tracking-headings sm:text-6xl xl:text-7xl/none">
                     <span className="gradient-text">
-                      AI-Powered Legal Guidance
+                      {t("home", "heroTitle")}
                     </span>
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Get accurate legal answers backed by real laws and
-                    regulations—free, instant, and in your language.
+                    {t("home", "heroDescription")}
                   </p>
                 </div>
                 <div className="flex flex-col gap-4 min-[400px]:flex-row">
@@ -177,7 +186,7 @@ export default function Home() {
                     className="rounded-button tracking-buttons text-lg px-8 py-6 transition-transform hover:scale-105 btn-primary-gradient text-primary-foreground font-semibold"
                   >
                     <Link href="/assistant" prefetch={false}>
-                      Get Legal Help Now
+                      {t("home", "getHelpNow")}
                     </Link>
                   </Button>
                   <Button
@@ -187,7 +196,7 @@ export default function Home() {
                     className="rounded-button tracking-buttons text-lg px-8 py-6 border-2 border-primary text-primary transition-transform hover:scale-105 hover:bg-primary/5"
                   >
                     <Link href="#how-it-works" prefetch={false}>
-                      How It Works
+                      {t("home", "howItWorks")}
                     </Link>
                   </Button>
                 </div>
@@ -213,25 +222,25 @@ export default function Home() {
               <div className="space-y-1">
                 <p className="text-4xl font-bold gradient-text">1,000+</p>
                 <p className="text-muted-foreground font-medium">
-                  Legal Resources Indexed
+                  {t("home", "legalResourcesIndexed")}
                 </p>
               </div>
               <div className="space-y-1">
                 <p className="text-4xl font-bold gradient-text">&lt;5 min</p>
                 <p className="text-muted-foreground font-medium">
-                  Average Response Time
+                  {t("home", "avgResponseTime")}
                 </p>
               </div>
               <div className="space-y-1">
                 <p className="text-4xl font-bold gradient-text">12+</p>
                 <p className="text-muted-foreground font-medium">
-                  Languages Supported
+                  {t("home", "languagesSupported")}
                 </p>
               </div>
               <div className="space-y-1">
                 <p className="text-4xl font-bold gradient-text">24/7</p>
                 <p className="text-muted-foreground font-medium">
-                  Always Available & Free
+                  {t("home", "alwaysAvailable")}
                 </p>
               </div>
             </div>
@@ -243,10 +252,10 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
               <div className="inline-block rounded-lg bg-secondary px-4 py-1.5 text-sm font-medium">
-                How It Works
+                {t("home", "howItWorks")}
               </div>
               <h2 className="text-3xl font-bold tracking-headings sm:text-4xl">
-                Justice in 4 Simple Steps
+                {t("home", "justiceInSteps")}
               </h2>
             </div>
             <div className="max-w-2xl mx-auto">
@@ -257,12 +266,11 @@ export default function Home() {
                       <div className="p-3 rounded-full bg-accent/10">
                         <MessageSquare className="h-6 w-6 text-accent" />
                       </div>
-                      <span>1. Share Your Problem</span>
+                      <span>{t("home", "step1Title")}</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground pl-16">
-                    Tell us your issue in your own words, in any supported
-                    language. You can also upload documents for analysis.
+                    {t("home", "step1Text")}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
@@ -271,12 +279,11 @@ export default function Home() {
                       <div className="p-3 rounded-full bg-accent/10">
                         <Brain className="h-6 w-6 text-accent" />
                       </div>
-                      <span>2. AI Analyzes Laws</span>
+                      <span>{t("home", "step2Title")}</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground pl-16">
-                    Our AI instantly scans thousands of central and state laws
-                    to find the ones relevant to your case.
+                    {t("home", "step2Text")}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
@@ -285,12 +292,11 @@ export default function Home() {
                       <div className="p-3 rounded-full bg-accent/10">
                         <Lightbulb className="h-6 w-6 text-accent" />
                       </div>
-                      <span>3. Get Clear Answers</span>
+                      <span>{t("home", "step3Title")}</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground pl-16">
-                    Receive a simple, easy-to-understand summary of your rights
-                    and a step-by-step action plan.
+                    {t("home", "step3Text")}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4">
@@ -299,12 +305,11 @@ export default function Home() {
                       <div className="p-3 rounded-full bg-accent/10">
                         <CheckCircle className="h-6 w-6 text-accent" />
                       </div>
-                      <span>4. Take Action</span>
+                      <span>{t("home", "step4Title")}</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="text-base text-muted-foreground pl-16">
-                    Use our guidance to draft letters, file complaints, and
-                    confidently resolve your issue.
+                    {t("home", "step4Text")}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -317,16 +322,20 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
               <h2 className="text-3xl font-bold tracking-headings sm:text-4xl">
-                What Makes LegalSahayak Different?
+                {t("home", "whatMakesDifferent")}
               </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-lg/relaxed">
-                We use advanced technology that understands your unique
-                situation and explains every legal recommendation step-by-step.
+                {t("home", "differentDescription")}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
               {featureCards.map((feature, index) => (
-                <FeatureCard key={index} feature={feature} />
+                <FeatureCard
+                  key={index}
+                  feature={feature}
+                  title={t("home", feature.titleKey)}
+                  description={t("home", feature.descriptionKey)}
+                />
               ))}
             </div>
           </div>
@@ -337,24 +346,26 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
               <h2 className="text-3xl font-bold tracking-headings sm:text-4xl">
-                Find Help for Your Issue
+                {t("home", "findHelpTitle")}
               </h2>
               <p className="max-w-[900px] text-muted-foreground md:text-lg/relaxed">
-                We cover a wide range of common legal problems.
+                {t("home", "findHelpDescription")}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Object.entries(categoryIcons).map(([category, Icon]) => (
+              {categoryCards.map((category) => (
                 <Card
-                  key={category}
+                  key={category.value}
                   className="p-6 text-center flex flex-col items-center shadow-light hover:shadow-medium transition-shadow"
                 >
                   <div className="p-4 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-4">
-                    <Icon className="h-10 w-10 text-accent" />
+                    <category.icon className="h-10 w-10 text-accent" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{category}</h3>
+                  <h3 className="text-xl font-bold mb-2">
+                    {t("home", category.labelKey)}
+                  </h3>
                   <p className="text-muted-foreground flex-1 mb-4">
-                    Landlord disputes, faulty products, salary issues, and more.
+                    {t("home", "categorySupport")}
                   </p>
                   <Button
                     asChild
@@ -362,9 +373,9 @@ export default function Home() {
                     className="rounded-button w-full"
                   >
                     <Link
-                      href={`/assistant?category=${encodeURIComponent(category)}`}
+                      href={`/assistant?category=${encodeURIComponent(category.value)}`}
                     >
-                      Start Here
+                      {t("home", "startHere")}
                     </Link>
                   </Button>
                 </Card>
@@ -378,17 +389,17 @@ export default function Home() {
           <div className="container text-center">
             <div className="max-w-2xl mx-auto">
               <h2 className="text-3xl font-bold tracking-headings sm:text-4xl">
-                Join Thousands Who Found Justice
+                {t("home", "joinThousands")}
               </h2>
               <p className="text-muted-foreground md:text-lg mt-4 mb-8">
-                100% Free • No Registration Required • Completely Confidential
+                {t("home", "joinDescription")}
               </p>
               <Button
                 asChild
                 size="lg"
                 className="rounded-button tracking-buttons text-lg px-10 py-7 transition-transform hover:scale-105 btn-primary-gradient text-primary-foreground font-semibold"
               >
-                <Link href="/onboarding">Start Your Legal Journey</Link>
+                <Link href="/onboarding">{t("home", "startJourney")}</Link>
               </Button>
             </div>
           </div>

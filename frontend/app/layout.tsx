@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageProvider } from "@/components/providers/language-provider";
 import { cn } from "@/lib/utils";
 import { Poppins, Bricolage_Grotesque } from "next/font/google";
 
@@ -35,8 +36,10 @@ export default function RootLayout({
           bricolageGrotesque.variable,
         )}
       >
-        {children}
-        <Toaster />
+        <LanguageProvider>
+          {children}
+          <Toaster />
+        </LanguageProvider>
       </body>
     </html>
   );

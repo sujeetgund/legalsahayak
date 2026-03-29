@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/lib/use-auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -33,11 +32,13 @@ import {
 } from "lucide-react";
 import { educationLevels, occupations, indianStates } from "@/lib/data";
 import { toast } from "sonner";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export default function DashboardPage() {
   const { user, updateUserInfo, updateProfile, deleteAccount, exportData } =
     useAuth();
   const router = useRouter();
+  const { t } = useLanguage();
 
   // Basic info form state
   const [fullName, setFullName] = useState(user?.fullName || "");
@@ -65,7 +66,7 @@ export default function DashboardPage() {
       } else {
         toast.error("Failed to update profile. Email might be already taken.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while updating profile.");
     } finally {
       setIsUpdatingBasic(false);
@@ -90,7 +91,7 @@ export default function DashboardPage() {
       } else {
         toast.error("Failed to update details.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred while updating details.");
     } finally {
       setIsUpdatingProfile(false);
@@ -149,22 +150,22 @@ export default function DashboardPage() {
   const quickActions = [
     {
       icon: MessageSquare,
-      title: "Ask AI Assistant",
-      description: "Get instant legal guidance",
+      title: t("dashboard", "askAssistant"),
+      description: t("dashboard", "askAssistantDesc"),
       href: "/assistant",
       color: "text-blue-600",
     },
     {
       icon: Scale,
-      title: "Community Forum",
-      description: "Connect with others",
+      title: t("dashboard", "communityForum"),
+      description: t("dashboard", "communityForumDesc"),
       href: "/forum",
       color: "text-purple-600",
     },
     {
       icon: BookOpen,
-      title: "Legal Resources",
-      description: "Browse legal library",
+      title: t("dashboard", "legalResources"),
+      description: t("dashboard", "legalResourcesDesc"),
       href: "/legal-library",
       color: "text-green-600",
     },
@@ -177,9 +178,11 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Your Dashboard</h1>
+        <h1 className="text-3xl font-bold font-headline">
+          {t("dashboard", "title")}
+        </h1>
         <p className="text-muted-foreground mt-2">
-          Manage your profile and access legal tools
+          {t("dashboard", "subtitle")}
         </p>
       </div>
 
@@ -197,7 +200,7 @@ export default function DashboardPage() {
               <h2 className="text-2xl font-bold">{user.fullName}</h2>
               <p className="text-muted-foreground">{user.email}</p>
               <p className="text-sm text-muted-foreground mt-2">
-                Member since{" "}
+                {t("dashboard", "memberSince")}{" "}
                 {new Date(user.createdAt).toLocaleDateString("en-IN", {
                   year: "numeric",
                   month: "long",
@@ -239,9 +242,13 @@ export default function DashboardPage() {
       {/* Profile Management Tabs */}
       <Tabs defaultValue="basic" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="basic">Basic Information</TabsTrigger>
-          <TabsTrigger value="profile">Additional Details</TabsTrigger>
-          <TabsTrigger value="account">Account Settings</TabsTrigger>
+          <TabsTrigger value="basic">{t("dashboard", "basicInfo")}</TabsTrigger>
+          <TabsTrigger value="profile">
+            {t("dashboard", "additionalDetails")}
+          </TabsTrigger>
+          <TabsTrigger value="account">
+            {t("dashboard", "accountSettings")}
+          </TabsTrigger>
         </TabsList>
 
         {/* Basic Information Tab */}

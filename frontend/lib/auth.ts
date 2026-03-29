@@ -6,6 +6,7 @@ export interface UserProfile {
   location?: string;
   education_level?: string;
   job_title?: string;
+  preferred_language?: "en" | "hi";
 }
 
 export interface User {
@@ -19,6 +20,17 @@ export interface User {
 
 const USERS_STORAGE_KEY = "legalsahayak_users";
 const CURRENT_USER_STORAGE_KEY = "legalsahayak_current_user";
+
+const normalizeUser = (user: User): User => {
+  return {
+    ...user,
+    profile: {
+      ...user.profile,
+      preferred_language:
+        user.profile?.preferred_language === "hi" ? "hi" : "en",
+    },
+  };
+};
 
 export const authUtils = {
   // Register a new user
@@ -37,6 +49,9 @@ export const authUtils = {
         password, // In production, this should be hashed
         fullName,
         createdAt: new Date().toISOString(),
+        profile: {
+          preferred_language: "en",
+        },
       };
 
       users.push(newUser);
@@ -85,7 +100,11 @@ export const authUtils = {
   getCurrentUser: (): User | null => {
     try {
       const userStr = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
-      return userStr ? JSON.parse(userStr) : null;
+      if (!userStr) {
+        return null;
+      }
+
+      return normalizeUser(JSON.parse(userStr));
     } catch (error) {
       console.error("Get current user error:", error);
       return null;
@@ -95,7 +114,10 @@ export const authUtils = {
   // Set current user
   setCurrentUser: (user: User): void => {
     try {
-      localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user));
+      localStorage.setItem(
+        CURRENT_USER_STORAGE_KEY,
+        JSON.stringify(normalizeUser(user)),
+      );
     } catch (error) {
       console.error("Set current user error:", error);
     }
@@ -105,7 +127,11 @@ export const authUtils = {
   getAllUsers: (): User[] => {
     try {
       const usersStr = localStorage.getItem(USERS_STORAGE_KEY);
-      return usersStr ? JSON.parse(usersStr) : [];
+      if (!usersStr) {
+        return [];
+      }
+
+      return (JSON.parse(usersStr) as User[]).map(normalizeUser);
     } catch (error) {
       console.error("Get all users error:", error);
       return [];
@@ -150,6 +176,10 @@ export const authUtils = {
       console.error("Update user profile error:", error);
       return false;
     }
+  },
+
+  updatePreferredLanguage: (language: "en" | "hi"): boolean => {
+    return authUtils.updateUserProfile({ preferred_language: language });
   },
 
   // Update user basic info (name, email)
@@ -225,7 +255,9 @@ export const authUtils = {
       }
 
       // Remove password from export for security
-      const { password, ...userDataWithoutPassword } = currentUser;
+      const { password: redactedPassword, ...userDataWithoutPassword } =
+        currentUser;
+      void redactedPassword;
 
       return JSON.stringify(userDataWithoutPassword, null, 2);
     } catch (error) {
