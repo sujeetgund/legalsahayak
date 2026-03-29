@@ -1,10 +1,12 @@
-# Legal Sahayak: RAG‑Based Explainable Legal Aid System for Community Empowerment
+# Legal Sahayak: RAG‑Based Explainable Legal Copilot for India
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
 
+> [!Note]
+> This project was developed as part of **EPICS** (Engineering Projects in Community Service), an initiative to apply engineering skills for social good and community empowerment.
 
 ## ❗ Problem Statement
 
@@ -40,71 +42,57 @@ Even when AI systems retrieve relevant sections, users can't trace **"why"** a p
 
 ## 🚀 Our Solution
 
-**Legal Sahayak** is an AI-powered, explainable legal assistance platform that democratizes access to legal information through:
+**Legal Sahayak** is an AI-powered, explainable legal assistance platform that democratizes access to legal information through an integrated system combining intelligent search, personalized explanations, and a comprehensive digital legal library.
 
-### Core Components
+### 1. Intelligent Legal Search & Retrieval
 
-#### 1. Retrieval-Augmented Generation (RAG)
-
-- **FAISS Vector Store**: Enables semantic search across 6+ domains of Indian law
-- **Hybrid Retrieval**: Combines dense embeddings (HuggingFace Transformers) with keyword matching for optimal relevance
+- **FAISS Vector Store**: Semantic search across 6+ domains of Indian law
+- **Hybrid Retrieval**: Combines dense embeddings (HuggingFace Transformers) with keyword matching
 - **Contextual Chunking**: Markdown-based hierarchical splitting preserves legal structure (Act → Chapter → Section)
+- **Cross-references**: Automatically links related laws and provisions
+- **Metadata Preservation**: Tracks source documents and specific legal sections
 
-#### 2. Demographic-Aware Personalization
+### 2. Demographic-Aware Personalization
 
-Adapts explanations based on:
+Adapts explanations based on user profile:
 
-- Age & Education → Simplifies language for users with lower literacy
-- Location → Prioritizes MP-specific laws and local court procedures
-- Occupation → Provides job-relevant examples (e.g., labor laws for factory workers)
-- Gender → Ensures culturally sensitive responses for sensitive issues
+- **Age & Education** → Simplifies legal language for users with lower literacy
+- **Location** → Prioritizes MP-specific laws and local court procedures
+- **Occupation** → Provides job-relevant examples (e.g., labor laws for factory workers)
+- **Gender** → Ensures culturally sensitive responses for sensitive issues
 
-#### 3. Explainable AI Architecture
+### 3. Explainable AI Architecture
 
-Every response includes:
+Every response includes structured information:
 
-```json
-{
-  "answer": "Plain-language legal explanation",
-  "confidence": 0.85,
-  "legal_references": [
-    "Consumer Protection Act, 2019 - Section 2(7)",
-    "MP Rent Control Act, 1961 - Section 12"
-  ],
-  "action_plan": [
-    {
-      "title": "File Complaint",
-      "description": "Visit District Consumer Forum within 30 days..."
-    }
-  ]
-}
-```
+- **Plain-language Answer**: Legal explanation in simple terms
+- **Confidence Score**: 0.9-1.0 (clearly defined), 0.6-0.8 (requires interpretation), <0.6 (recommends lawyer)
+- **Legal References**: Direct citations to applicable laws and sections
+- **Action Plans**: Step-by-step guidance with timelines, relevant authorities, required documents, and cost estimates
 
-#### 4. Structured Action Plans
+### 4. Bilingual Support (Hindi + English)
 
-Converts legal knowledge into actionable steps:
+- Full application interface in Hindi and English
+- Responsive language toggle for seamless switching
+- Culturally relevant explanations adapted to local context
+- Supports semi-literate users with simplified language options
 
-- **Step-by-step guidance** with timelines
-- **Relevant authorities** (e.g., State Consumer Commission - Bhopal)
-- **Required documents** checklist
-- **Cost estimates** (court fees, stamp duty)
+### 5. Legal Library
 
-#### 5. Multi-Domain Legal Coverage
+- Interactive, searchable database of Indian laws
+- Covers 6+ legal domains: Consumer Protection, Fundamental Rights, Marriage Laws (Hindu & Muslim), Labor Laws, Rental Laws
+- Real-time document browsing with hierarchical navigation
+- Quick reference guides for common legal scenarios
 
-Currently supports:
+### 6. Privacy-First Design
 
-* ✓ Consumer Protection Law
-* ✓ Fundamental Rights (Constitution of India)
-* ✓ Hindu Marriage Act, 1955
-* ✓ Muslim Personal Law
-* ✓ Labor Laws (Industrial Disputes Act, Minimum Wages Act)
-* ✓ Rental/Tenancy Laws (MP-specific)
-
+- No storage of personal legal queries
+- Demographic data used only for response generation
+- GDPR-compliant data handling
 
 ---
 
-
-## Sequence Diagram: Query Processing Flow
+## 🔄 Query Processing Flow (Architecture)
 
 ```mermaid
 sequenceDiagram
@@ -138,33 +126,6 @@ sequenceDiagram
     F-->>U: Display formatted answer
     Note over F,U: (1) Explanation<br/>(2) Confidence Score<br/>(3) Sources<br/>(4) Action Plan
 ```
-
----
-
-## ✨ Key Features
-
-### 1. Contextual Legal Search
-
-- Semantic understanding beyond keyword matching
-- Cross-references related laws automatically
-- Metadata preservation (source documents, sections)
-
-### 2. Confidence Scoring
-
-- **0.9-1.0**: Law clearly defined, direct match in knowledge base
-- **0.6-0.8**: Partial coverage, requires interpretation
-- **< 0.6**: Limited context, recommends consulting a lawyer
-
-### 3. Bilingual Support (Planned)
-
-- Hindi transliteration for semi-literate users
-- Audio input/output for accessibility
-
-### 4. Privacy-First Design
-
-- No storage of personal legal queries
-- Demographic data used only for response generation
-- GDPR-compliant data handling
 
 ---
 
@@ -252,7 +213,7 @@ DATA_DIR=data
 FAISS_INDEX_DIR=faiss_index
 ```
 
-#### d. Build Vector Store
+#### d. Build Vector Store (optional)
 
 ```bash
 python build_vectorstore.py
@@ -407,46 +368,6 @@ curl -X POST http://localhost:8000/api/v1/qa/ask \
     }
   }'
 ```
-
----
-
-## 📚 API Documentation
-
-### Authentication
-
-All endpoints require a Bearer token:
-
-```
-Authorization: Bearer <your_token>
-```
-
-### Endpoints
-
-#### 1. Health Check
-
-```http
-GET /health
-```
-
-**Response**: `{"status": "healthy"}`
-
-#### 2. Root
-
-```http
-GET /
-```
-
-**Response**: `{"version": "1.0.0", "status": "running"}`
-
-#### 3. Ask Question
-
-```http
-POST /api/v1/qa/ask
-```
-
-**Body**: `QARequestModel` (see [schemas.py](backend/models/schemas.py))
-
-**Response**: `QAResponseModel`
 
 ---
 
