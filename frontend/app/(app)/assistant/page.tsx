@@ -34,7 +34,7 @@ export default function AssistantPage() {
   const [input, setInput] = useState("");
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -59,7 +59,11 @@ export default function AssistantPage() {
       const res = await fetch("/api/qa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, demographics }),
+        body: JSON.stringify({
+          question,
+          demographics,
+          preferred_language: language,
+        }),
       });
 
       if (!res.ok) {

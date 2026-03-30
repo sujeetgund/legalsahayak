@@ -1,9 +1,9 @@
 import logging
+import time
+import uuid
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from models.schemas import QARequestModel, QAResponseModel
-from core.security import verify_token
-from core.config import settings
 from services.qa_service import QAService
 from core.exceptions import QAServiceError
 
@@ -27,14 +27,33 @@ async def answer_question(
 ):
     """
     Endpoint to answer questions based on document content.
-    Requires authentication via token.
     """
+    trace_id = uuid.uuid4().hex[:12]
+    start_time = time.time()
+
     try:
-        logger.info(f"Received question: {request.question}")
+        logger.info(
+            "trace_id=%s received QA question; preferred_language=%s",
+            trace_id,
+            request.preferred_language,
+        )
         answer = await qa_service.get_answer(qa_request=request)
+        latency_ms = (time.time() - start_time) * 1000
+        logger.info(
+            "trace_id=%s completed QA request in %.2fms with confidence=%.3f",
+            trace_id,
+            latency_ms,
+            answer.confidence,
+        )
         return answer
     except QAServiceError as e:
-        logger.error(f"QA Service error: {e}")
+        latency_ms = (time.time() - start_time) * 1000
+        logger.error(
+            "trace_id=%s QA Service error in %.2fms: %s",
+            trace_id,
+            latency_ms,
+            e,
+        )
         raise HTTPException(
             status_code=500, detail="Failed to get answer from QA service."
         )

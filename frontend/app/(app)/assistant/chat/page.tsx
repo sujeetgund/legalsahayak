@@ -237,7 +237,7 @@ export default function AssistantChatPage() {
   const [history, setHistory] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isPending, setIsPending] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const quickPrompts = [
     t("assistant", "quickPrompt1"),
     t("assistant", "quickPrompt2"),
@@ -298,10 +298,18 @@ export default function AssistantChatPage() {
       const res = await fetch("/api/qa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, demographics }),
+        body: JSON.stringify({
+          question,
+          demographics,
+          preferred_language: language,
+        }),
       });
 
-      console.log("Request payload:", { question, demographics });
+      console.log("Request payload:", {
+        question,
+        demographics,
+        preferred_language: language,
+      });
       console.log("API response status:", res.status);
 
       if (!res.ok) {

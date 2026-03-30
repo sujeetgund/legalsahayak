@@ -2,6 +2,7 @@ import logging
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from core.config import settings
+from routes.metrics_route import metrics_router
 from routes.qa_route import qa_router
 from services.qa_service import QAService
 
@@ -33,7 +34,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="API for answering questions based on document content using Google Generative AI",
+    description="API for LegalSahayak - AI-powered legal assistant for Indian law",
     version=settings.API_VERSION,
     lifespan=lifespan,
     root_path=settings.API_PATH,
@@ -41,6 +42,7 @@ app = FastAPI(
 
 # Include routers
 app.include_router(qa_router)
+app.include_router(metrics_router)
 
 
 @app.get("/")
