@@ -143,7 +143,7 @@ export function AppHeader() {
                       className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                     >
                       <BookText className="h-4 w-4" />
-                      Legal Library
+                      {t("header", "legalLibrary")}
                     </Link>
                     <Link
                       href="/dashboard"
@@ -188,11 +188,8 @@ export function AppHeader() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link
-                href="/library"
-                className={navigationMenuTriggerStyle()}
-              >
-                Legal Library
+              <Link href="/library" className={navigationMenuTriggerStyle()}>
+                {t("header", "legalLibrary")}
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -210,41 +207,6 @@ export function AppHeader() {
         </form>
 
         <LanguageToggle compact className="hidden sm:inline-flex" />
-
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-start gap-3">
-                <MessageSquare className="h-4 w-4 mt-1 text-muted-foreground" />
-                <div>
-                  <p className="font-medium text-sm">
-                    New comment on your story
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Ravi Shankar replied to &quot;My experience with...&quot;
-                  </p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link
-                href="/notifications"
-                className="cursor-pointer flex items-center justify-center text-sm text-primary hover:text-primary"
-              >
-                View all notifications
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

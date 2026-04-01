@@ -1,242 +1,125 @@
 "use client";
 
+import { useLanguage } from "@/components/providers/language-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { authUtils } from "@/lib/auth";
-import { ArrowRight, BookOpen, Loader2, Send, Users } from "lucide-react";
+import { ArrowRight, BookOpen, Send, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
-import { useLanguage } from "@/components/providers/language-provider";
-
-type Demographics = {
-  age: number;
-  gender: string;
-  location: string;
-  education_level: string;
-  job_title: string;
-};
-
-type ActionPlanStep = {
-  title: string;
-  description: string;
-};
-
-type ApiResponse = {
-  answer: string;
-  confidence: number;
-  legal_references: string[];
-  action_plan: ActionPlanStep[];
-};
 
 export default function AssistantPage() {
   const [input, setInput] = useState("");
-  const [isPending, setIsPending] = useState(false);
   const router = useRouter();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
-    const question = input.trim();
-    if (!question) return;
-
-    setIsPending(true);
-
-    try {
-      const user = authUtils.getCurrentUser();
-      const profile = user?.profile;
-
-      const demographics: Demographics = {
-        age: profile?.age ?? 0,
-        gender: profile?.gender ?? "Not specified",
-        location: profile?.location ?? "India",
-        education_level: profile?.education_level ?? "Not specified",
-        job_title: profile?.job_title ?? "Not specified",
-      };
-
-      const res = await fetch("/api/qa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question,
-          demographics,
-          preferred_language: language,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`API error: ${res.status}`);
-      }
-
-      const data: ApiResponse = await res.json();
-
-      // Store initial conversation in sessionStorage
-      const initialConversation = [
-        {
-          id: `${Date.now()}-user`,
-          role: "user" as const,
-          content: question,
-        },
-        {
-          id: `${Date.now()}-assistant`,
-          role: "assistant" as const,
-          content: data.answer,
-          response: data,
-        },
-      ];
-
-      sessionStorage.setItem(
-        "initial_conversation",
-        JSON.stringify(initialConversation),
-      );
-
-      router.push("/assistant/chat");
-    } catch (error) {
-      console.error("Failed to get response:", error);
-
-      // Store error conversation
-      const errorConversation = [
-        {
-          id: `${Date.now()}-user`,
-          role: "user" as const,
-          content: question,
-        },
-        {
-          id: `${Date.now()}-assistant`,
-          role: "assistant" as const,
-          content: t("assistant", "genericError"),
-        },
-      ];
-
-      sessionStorage.setItem(
-        "initial_conversation",
-        JSON.stringify(errorConversation),
-      );
-
-      router.push("/assistant/chat");
-    } finally {
-      setIsPending(false);
+  const openChat = (draft?: string) => {
+    const question = draft?.trim();
+    if (question) {
+      sessionStorage.setItem("assistant_draft", question);
     }
+    router.push("/assistant/chat");
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    openChat(input);
   };
 
   return (
-    <div className="space-y-12">
-      {isPending && (
-        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-          <Card className="p-8 flex flex-col items-center gap-4">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <div className="text-center">
-              <h3 className="text-lg font-semibold">
-                {t("assistant", "loadingTitle")}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {t("assistant", "loadingDesc")}
-              </p>
-            </div>
-          </Card>
+    <div className="space-y-16">
+      <section className="mx-auto w-full max-w-5xl px-4 pt-12 text-center sm:px-6 md:pt-20">
+        <div className="mx-auto max-w-3xl space-y-5">
+          <h1 className="text-5xl font-extrabold tracking-tight text-amber-500 sm:text-6xl md:text-7xl">
+            {t("assistant", "title")}
+          </h1>
+          <p className="text-base text-muted-foreground sm:text-lg">
+            {t("assistant", "subtitle")}
+          </p>
         </div>
-      )}
-      {/* Hero Section */}
-      <section className="w-full py-16 md:py-24 lg:py-32 text-center">
-        <div className="container px-4 md:px-6 z-10">
-          <div className="flex flex-col items-center justify-center space-y-6">
-            <h1 className="text-5xl font-bold tracking-headings sm:text-6xl xl:text-7xl/none">
-              <span className="gradient-text">{t("assistant", "title")}</span>
-            </h1>
-            <p className="max-w-[700px] text-muted-foreground md:text-xl">
-              {t("assistant", "subtitle")}
-            </p>
+
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto mt-10 w-full max-w-3xl"
+        >
+          <div className="group relative overflow-hidden rounded-2xl border border-border/70 bg-card/95 shadow-[0_10px_30px_-18px_rgba(15,23,42,0.5)] transition-all duration-300 focus-within:-translate-y-0.5 focus-within:border-amber-300/70 focus-within:shadow-[0_18px_40px_-20px_rgba(251,191,36,0.45)]">
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(251,191,36,0.12)_0%,rgba(255,255,255,0)_36%)] opacity-70" />
+            <Textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t("assistant", "inputPlaceholder")}
+              className="min-h-[78px] resize-none border-0 bg-transparent py-6 pl-5 pr-20 text-sm leading-relaxed shadow-none focus-visible:ring-0"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
+            />
+            <Button
+              type="submit"
+              size="icon"
+              className="absolute right-4 top-1/2 h-11 w-11 -translate-y-1/2 rounded-full border border-amber-300/60 bg-gradient-to-br from-amber-300 via-amber-400 to-amber-500 text-amber-950 shadow-[0_8px_18px_-10px_rgba(251,191,36,0.9)] transition-all duration-200 hover:scale-105 hover:from-amber-200 hover:to-amber-400 disabled:opacity-60"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
           </div>
-          <div className="max-w-3xl mx-auto mt-12">
-            <form onSubmit={handleSubmit}>
-              <div className="relative bg-background rounded-xl shadow-heavy border border-transparent transition-all">
-                <Textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={t("assistant", "inputPlaceholder")}
-                  disabled={isPending}
-                  className="pr-36 min-h-[80px] text-lg p-6 rounded-xl shadow-none border-0 focus-visible:ring-0 resize-none"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                  <Button
-                    type="submit"
-                    size="icon"
-                    disabled={isPending || input.trim() === ""}
-                    className="w-12 h-12 rounded-full btn-primary-gradient"
-                  >
-                    {isPending ? (
-                      <Loader2 className="w-6 h-6 animate-spin" />
-                    ) : (
-                      <Send className="w-6 h-6" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+        </form>
       </section>
 
-      {/* Quick Action Cards */}
-      <section className="w-full py-16 md:py-24 bg-card">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-headings sm:text-4xl">
-              {t("assistant", "resourcesTitle")}
-            </h2>
-            <p className="max-w-[900px] text-muted-foreground md:text-lg/relaxed">
-              {t("assistant", "resourcesSubtitle")}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* <LegalDictionary /> */}
-            <Card className="p-8 shadow-medium hover:shadow-heavy transition-shadow duration-300 flex flex-col justify-between h-full">
-              <div>
-                <div className="p-4 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-4">
-                  <Users className="h-10 w-10 text-accent" />
-                </div>
-                <CardTitle className="text-2xl font-bold mb-2">
-                  {t("assistant", "communityStories")}
-                </CardTitle>
-                <CardDescription className="mb-4 flex-1">
-                  {t("assistant", "communityStoriesDesc")}
-                </CardDescription>
-              </div>
-              <Button asChild className="w-full mt-4 rounded-button">
-                <Link href="/forum">
-                  {t("assistant", "browseStories")}{" "}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </Card>
-            <Card className="p-8 shadow-medium hover:shadow-heavy transition-shadow duration-300 flex flex-col justify-between h-full">
-              <div>
-                <div className="p-4 rounded-full bg-gradient-to-br from-accent/20 to-amber-500/20 w-fit mb-4">
-                  <BookOpen className="h-10 w-10 text-accent" />
-                </div>
-                <CardTitle className="text-2xl font-bold mb-2">
-                  {t("assistant", "exploreTopics")}
-                </CardTitle>
-                <CardDescription className="mb-4 flex-1">
-                  {t("assistant", "exploreTopicsDesc")}
-                </CardDescription>
-              </div>
-              <Button asChild className="w-full mt-4 rounded-button">
-                <Link href="/library">
-                  {t("assistant", "goToLibrary")}{" "}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </Card>
-          </div>
+      <section className="mx-auto w-full max-w-7xl rounded-2xl border border-border/50 bg-card/60 px-4 py-12 sm:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-4xl font-bold tracking-tight text-foreground">
+            {t("assistant", "resourcesTitle")}
+          </h2>
+          <p className="mt-3 text-muted-foreground">
+            {t("assistant", "resourcesSubtitle")}
+          </p>
+        </div>
+
+        <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-4 md:grid-cols-2">
+          <Card className="gap-4 border-border/70 bg-background p-6 shadow-sm">
+            <div className="w-fit rounded-full bg-amber-100 p-3">
+              <Users className="h-5 w-5 text-amber-600" />
+            </div>
+            <CardTitle className="text-2xl">
+              {t("assistant", "communityStories")}
+            </CardTitle>
+            <CardDescription className="text-sm">
+              {t("assistant", "communityStoriesDesc")}
+            </CardDescription>
+            <Button
+              asChild
+              className="mt-auto w-full justify-between rounded-md text-primary-foreground text-white"
+            >
+              <Link href="/forum">
+                {t("assistant", "browseStories")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </Card>
+
+          <Card className="gap-4 border-border/70 bg-background p-6 shadow-sm">
+            <div className="w-fit rounded-full bg-amber-100 p-3">
+              <BookOpen className="h-5 w-5 text-amber-600" />
+            </div>
+            <CardTitle className="text-2xl">
+              {t("assistant", "exploreTopics")}
+            </CardTitle>
+            <CardDescription className="text-sm">
+              {t("assistant", "exploreTopicsDesc")}
+            </CardDescription>
+            <Button
+              asChild
+              className="mt-auto w-full justify-between rounded-md text-primary-foreground text-white"
+            >
+              <Link href="/library">
+                {t("assistant", "goToLibrary")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </Card>
         </div>
       </section>
     </div>
