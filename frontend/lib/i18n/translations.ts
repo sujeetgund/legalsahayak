@@ -28,7 +28,6 @@ export const translations = {
       viewOverview: "View your overview",
       quickAccess: "Quick Access",
       communityForum: "Community Forum",
-      legalLibrary: "Legal Library",
       helpSupport: "Help & Support",
       downloadData: "Download My Data",
       logout: "Log Out",
@@ -213,7 +212,7 @@ export const translations = {
       language: "भाषा",
       english: "अंग्रेज़ी",
       hindi: "हिंदी",
-      legalSahayak: "लीगलसहायक",
+      legalSahayak: "Legal Sahayak",
       termsOfService: "सेवा की शर्तें",
       privacyPolicy: "गोपनीयता नीति",
       continue: "जारी रखें",
@@ -222,7 +221,7 @@ export const translations = {
     },
     header: {
       toggleMenu: "मेनू टॉगल करें",
-      aiAssistant: "एआई सहायक",
+      aiAssistant: "AI सहायक",
       community: "समुदाय",
       legalLibrary: "कानूनी पुस्तकालय",
       dashboard: "डैशबोर्ड",
@@ -233,7 +232,6 @@ export const translations = {
       viewOverview: "अपना ओवरव्यू देखें",
       quickAccess: "त्वरित पहुंच",
       communityForum: "कम्युनिटी फोरम",
-      legalLibrary: "कानूनी पुस्तकालय",
       helpSupport: "सहायता और समर्थन",
       downloadData: "मेरा डेटा डाउनलोड करें",
       logout: "लॉग आउट",
@@ -242,7 +240,7 @@ export const translations = {
     },
     home: {
       legalHelpline: "24/7 कानूनी हेल्पलाइन",
-      heroTitle: "एआई आधारित कानूनी मार्गदर्शन",
+      heroTitle: "AI आधारित कानूनी मार्गदर्शन",
       heroDescription:
         "वास्तविक कानूनों और नियमों पर आधारित सटीक कानूनी उत्तर पाएं-मुफ्त, तुरंत और आपकी भाषा में।",
       getHelpNow: "अभी कानूनी मदद लें",
@@ -255,16 +253,16 @@ export const translations = {
       step1Title: "1. अपनी समस्या साझा करें",
       step1Text:
         "अपनी समस्या अपनी भाषा में बताएं। आप दस्तावेज़ भी अपलोड कर सकते हैं।",
-      step2Title: "2. एआई कानूनों का विश्लेषण करता है",
+      step2Title: "2. AI कानूनों का विश्लेषण करता है",
       step2Text:
-        "हमारा एआई आपके मामले से जुड़े केंद्रीय और राज्य कानून तुरंत खोजता है।",
+        "हमारा AI आपके मामले से जुड़े केंद्रीय और राज्य कानून तुरंत खोजता है।",
       step3Title: "3. स्पष्ट उत्तर पाएं",
       step3Text:
         "अपने अधिकारों का सरल सारांश और चरण-दर-चरण कार्य योजना प्राप्त करें।",
       step4Title: "4. कार्रवाई करें",
       step4Text:
         "शिकायत दर्ज करने, पत्र लिखने और समाधान पाने के लिए मार्गदर्शन का उपयोग करें।",
-      whatMakesDifferent: "लीगलसहायक को अलग क्या बनाता है?",
+      whatMakesDifferent: "Legal Sahayak को अलग क्या बनाता है?",
       differentDescription:
         "हम उन्नत तकनीक का उपयोग करते हैं जो आपकी स्थिति समझती है और हर सिफारिश का कारण बताती है।",
       findHelpTitle: "अपनी समस्या के लिए मदद खोजें",
@@ -278,7 +276,7 @@ export const translations = {
       startJourney: "अपनी कानूनी यात्रा शुरू करें",
       personalizedTitle: "आपके लिए व्यक्तिगत",
       personalizedDescription:
-        "स्मार्ट एआई आपकी लोकेशन और परिस्थितियों के अनुसार सलाह देता है।",
+        "स्मार्ट AI आपकी लोकेशन और परिस्थितियों के अनुसार सलाह देता है।",
       ragTitle: "उन्नत RAG सिस्टम",
       ragDescription:
         "हर उत्तर वास्तविक कानूनों, नियमों और उदाहरणों पर आधारित होता है।",
@@ -296,7 +294,7 @@ export const translations = {
       categoryOther: "अन्य कानूनी मुद्दे",
     },
     auth: {
-      tagline: "एआई आधारित कानूनी सहायता",
+      tagline: "AI आधारित कानूनी सहायता",
       welcomeBack: "वापसी पर स्वागत है",
       signinDescription: "अपना कानूनी डैशबोर्ड देखने के लिए साइन इन करें",
       email: "ईमेल",
@@ -310,7 +308,7 @@ export const translations = {
       bySignin: "साइन इन करके आप हमारी",
       createAccount: "अपना खाता बनाएं",
       signupDescription:
-        "एआई आधारित कानूनी सहायता और समुदाय से जुड़ने के लिए हमारे साथ जुड़ें",
+        "AI आधारित कानूनी सहायता और समुदाय से जुड़ने के लिए हमारे साथ जुड़ें",
       fullName: "पूरा नाम",
       confirmPassword: "पासवर्ड की पुष्टि करें",
       creatingAccount: "खाता बनाया जा रहा है...",
@@ -324,8 +322,8 @@ export const translations = {
       welcomeTitle: "स्वागत है! चलिए शुरू करते हैं",
       welcomeDescription:
         "हमें अपने बारे में बताएं ताकि हम आपकी जरूरत के अनुसार कानूनी मार्गदर्शन दे सकें।",
-      aiGuidance: "एआई आधारित मार्गदर्शन",
-      aiGuidanceDesc: "उन्नत एआई से तुरंत कानूनी सलाह पाएं",
+      aiGuidance: "AI आधारित मार्गदर्शन",
+      aiGuidanceDesc: "उन्नत AI से तुरंत कानूनी सलाह पाएं",
       forEveryone: "सबके लिए",
       forEveryoneDesc: "सभी भारतीयों के लिए सुलभ कानूनी सहायता",
       knowRights: "अपने अधिकार जानें",
@@ -348,7 +346,7 @@ export const translations = {
       female: "महिला",
       other: "अन्य",
       preferNot: "बताना नहीं चाहते",
-      continueButton: "लीगलसहायक पर आगे बढ़ें",
+      continueButton: "Legal Sahayak पर आगे बढ़ें",
       termsNote:
         "जारी रखकर आप हमारी सेवा की शर्तों और गोपनीयता नीति से सहमत हैं",
     },
@@ -364,7 +362,7 @@ export const translations = {
       title: "आपका डैशबोर्ड",
       subtitle: "अपनी प्रोफाइल प्रबंधित करें और कानूनी टूल्स उपयोग करें",
       memberSince: "सदस्यता शुरू",
-      askAssistant: "एआई सहायक से पूछें",
+      askAssistant: "AI सहायक से पूछें",
       askAssistantDesc: "तुरंत कानूनी मार्गदर्शन पाएं",
       communityForum: "कम्युनिटी फोरम",
       communityForumDesc: "दूसरों से जुड़ें",
@@ -377,9 +375,9 @@ export const translations = {
     assistant: {
       loadingTitle: "आपके प्रश्न का विश्लेषण हो रहा है...",
       loadingDesc: "इसमें कुछ समय लग सकता है",
-      title: "एआई कानूनी सहायक",
+      title: "AI कानूनी सहायक",
       subtitle:
-        "आपके अधिकार समझने के लिए आपका गोपनीय एआई सहायक। कोई भी कानूनी प्रश्न पूछें और स्पष्ट उत्तर पाएं।",
+        "आपके अधिकार समझने के लिए आपका गोपनीय AI सहायक। कोई भी कानूनी प्रश्न पूछें और स्पष्ट उत्तर पाएं।",
       inputPlaceholder: "मेरा मकान मालिक सुरक्षा जमा राशि वापस नहीं कर रहा...",
       resourcesTitle: "या, अन्य संसाधन देखें",
       resourcesSubtitle:
@@ -395,7 +393,7 @@ export const translations = {
       genericError: "क्षमा करें, त्रुटि हुई। कृपया फिर प्रयास करें।",
       jurisdiction: "क्षेत्राधिकार: भारत",
       confidence: "विश्वसनीयता",
-      aiGeneratedGuidance: "एआई द्वारा निर्मित मार्गदर्शन",
+      aiGeneratedGuidance: "AI द्वारा निर्मित मार्गदर्शन",
       answerTab: "उत्तर",
       legalReferencesTab: "कानूनी संदर्भ",
       actionPlanTab: "कार्य योजना",
@@ -410,7 +408,7 @@ export const translations = {
       detailedInputPlaceholder:
         "अपनी कानूनी स्थिति विस्तार से बताएं। तारीख, स्थान और संबंधित संदर्भ शामिल करें...",
       tipText: "टिप: अधिक सटीक मार्गदर्शन के लिए संदर्भ और स्थान दें।",
-      poweredBy: "लीगलसहायक एआई द्वारा संचालित",
+      poweredBy: "Legal Sahayak AI द्वारा संचालित",
     },
   },
 } as const;

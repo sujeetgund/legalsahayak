@@ -1,9 +1,13 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LanguageToggle } from "@/components/language-toggle";
-import { useLanguage } from "@/components/providers/language-provider";
+import {
+  getTranslation,
+  type Language,
+  type TranslationKey,
+  type TranslationSection,
+} from "@/lib/i18n/translations";
+import { cookies } from "next/headers";
 
 import {
   Accordion,
@@ -127,8 +131,15 @@ const featureCards = [
   },
 ] as const;
 
-export default function Home() {
-  const { t } = useLanguage();
+export default async function Home() {
+  const cookieStore = await cookies();
+  const language: Language =
+    cookieStore.get("legalsahayak_language")?.value === "hi" ? "hi" : "en";
+
+  const t = <S extends TranslationSection>(
+    section: S,
+    key: TranslationKey<S>,
+  ): string => getTranslation(language, section, key);
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -208,6 +219,7 @@ export default function Home() {
                   alt="Diverse people of India"
                   width={600}
                   height={500}
+                  sizes="(min-width: 1024px) 600px, 100vw"
                   className="rounded-xl shadow-heavy"
                 />
               </div>

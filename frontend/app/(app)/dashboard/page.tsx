@@ -60,7 +60,7 @@ export default function DashboardPage() {
     setIsUpdatingBasic(true);
 
     try {
-      const success = updateUserInfo(fullName, email);
+      const success = await updateUserInfo(fullName, email);
       if (success) {
         toast.success("Profile updated successfully!");
       } else {
@@ -78,7 +78,7 @@ export default function DashboardPage() {
     setIsUpdatingProfile(true);
 
     try {
-      const success = updateProfile({
+      const success = await updateProfile({
         age: age ? parseInt(age) : undefined,
         gender: gender || undefined,
         location: location || undefined,
@@ -116,7 +116,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone.",
     );
@@ -127,7 +127,7 @@ export default function DashboardPage() {
       );
 
       if (secondConfirm) {
-        const success = deleteAccount();
+        const success = await deleteAccount();
         if (success) {
           toast.success("Account deleted successfully.");
           router.push("/");

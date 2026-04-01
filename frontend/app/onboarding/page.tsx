@@ -30,7 +30,7 @@ import { useRouter } from "next/navigation";
 import { Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 import { educationLevels, indianStates, occupations } from "@/lib/data";
-import { authUtils } from "@/lib/auth";
+import { useAuth } from "@/lib/use-auth";
 import { toast } from "sonner";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -55,6 +55,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export default function OnboardingPage() {
   const router = useRouter();
   const { t } = useLanguage();
+  const { updateProfile } = useAuth();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema) as Resolver<ProfileFormValues>,
@@ -67,9 +68,9 @@ export default function OnboardingPage() {
     },
   });
 
-  const onSubmit = (data: ProfileFormValues) => {
+  const onSubmit = async (data: ProfileFormValues) => {
     // Save onboarding details to user profile
-    const success = authUtils.updateUserProfile({
+    const success = await updateProfile({
       age: data.age,
       gender: data.gender,
       location: data.location.toLowerCase(),

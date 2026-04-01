@@ -13,13 +13,21 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useLanguage } from "@/components/providers/language-provider";
-import { authUtils } from "@/lib/auth";
+import { useAuth } from "@/lib/use-auth";
 import { cn } from "@/lib/utils";
-import { ArrowLeft, CheckCircle, Loader2, Scale, Send, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  Loader2,
+  Scale,
+  Send,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { askLegalAssistant, type AssistantApiResponse } from "./actions";
 
 type Demographics = {
   age: number;
@@ -29,25 +37,7 @@ type Demographics = {
   job_title: string;
 };
 
-type ActionPlanStep = {
-  title: string;
-  description: string;
-};
-
-type SourcePassage = {
-  source: string;
-  quote: string;
-  section?: string | null;
-  relevance_score: number;
-};
-
-type ApiResponse = {
-  answer: string;
-  confidence: number;
-  legal_references: string[];
-  action_plan: ActionPlanStep[];
-  source_passages?: SourcePassage[];
-};
+type ApiResponse = AssistantApiResponse;
 
 type Message = {
   id: string;
@@ -56,10 +46,13 @@ type Message = {
   response?: ApiResponse;
 };
 
-const buildDemographics = (): Demographics => {
-  const user = authUtils.getCurrentUser();
-  const profile = user?.profile;
-
+const buildDemographics = (profile?: {
+  age?: number;
+  gender?: string;
+  location?: string;
+  education_level?: string;
+  job_title?: string;
+}): Demographics => {
   return {
     age: profile?.age ?? 0,
     gender: profile?.gender ?? "Not specified",
@@ -158,11 +151,13 @@ const AssistantResponse = ({
                   {passage.source}
                   {passage.section ? ` • ${passage.section}` : ""}
                 </p>
-                <p className="mt-1 text-sm">"{passage.quote}"</p>
+                <p className="mt-1 text-sm">&quot;{passage.quote}&quot;</p>
               </div>
             ))
           ) : (
-            <p className="text-sm text-muted-foreground">No quote snippets available.</p>
+            <p className="text-sm text-muted-foreground">
+              No quote snippets available.
+            </p>
           )}
         </TabsContent>
 
@@ -208,6 +203,7 @@ const AssistantResponse = ({
 };
 
 export default function AssistantChatPage() {
+  const { user } = useAuth();
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -236,21 +232,11 @@ export default function AssistantChatPage() {
     setIsPending(true);
 
     try {
-      const res = await fetch("/api/qa", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: cleanQuestion,
-          demographics: buildDemographics(),
-          preferred_language: language,
-        }),
+      const data = await askLegalAssistant({
+        question: cleanQuestion,
+        demographics: buildDemographics(user?.profile),
+        preferred_language: language,
       });
-
-      if (!res.ok) {
-        throw new Error(`API error: ${res.status}`);
-      }
-
-      const data: ApiResponse = await res.json();
 
       addMessage({
         role: "assistant",
@@ -370,7 +356,10 @@ export default function AssistantChatPage() {
             {history.map((message) => (
               <div
                 key={message.id}
-                className={cn("flex", message.role === "user" ? "justify-end" : "justify-start")}
+                className={cn(
+                  "flex",
+                  message.role === "user" ? "justify-end" : "justify-start",
+                )}
               >
                 {message.role === "user" ? (
                   <div className="max-w-[85%] rounded-2xl bg-primary px-4 py-3 text-sm text-primary-foreground shadow-sm sm:max-w-[70%]">

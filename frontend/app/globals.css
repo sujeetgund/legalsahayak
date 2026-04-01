@@ -1,3 +1,4 @@
+@import "@clerk/ui/themes/shadcn.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -38,7 +39,7 @@
     --sidebar-border: 215 54% 33%;
     --sidebar-ring: 43 100% 50%;
   }
- 
+
   .dark {
     --background: 215 54% 15%; /* Darker Navy */
     --foreground: 220 13% 91%; /* Light Gray */
@@ -69,7 +70,7 @@
     --sidebar-ring: 43 100% 50%;
   }
 }
- 
+
 @layer base {
   * {
     @apply border-border;
@@ -78,7 +79,12 @@
     @apply bg-background text-foreground;
     line-height: 1.6;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply leading-tight;
   }
 }
@@ -88,6 +94,6 @@
 }
 
 .btn-primary-gradient {
-  background-image: linear-gradient(to right, hsl(var(--accent)), #FF8F00);
+  background-image: linear-gradient(to right, hsl(var(--accent)), #ff8f00);
   border: 0;
 }

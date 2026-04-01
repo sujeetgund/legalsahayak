@@ -1,6 +1,5 @@
 "use client";
 
-import { authUtils } from "@/lib/auth";
 import {
   getTranslation,
   LANGUAGE_STORAGE_KEY,
@@ -43,10 +42,8 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       return "en";
     }
 
-    const currentUser = authUtils.getCurrentUser();
-    const profileLanguage = currentUser?.profile?.preferred_language;
     const localLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return coerceLanguage(profileLanguage ?? localLanguage);
+    return coerceLanguage(localLanguage);
   });
 
   useEffect(() => {
@@ -55,7 +52,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     }
 
     window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
-    authUtils.updatePreferredLanguage(language);
+    document.cookie = `${LANGUAGE_STORAGE_KEY}=${language}; path=/; max-age=31536000; samesite=lax`;
   }, [language]);
 
   const setLanguage = useCallback((nextLanguage: Language) => {

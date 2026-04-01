@@ -40,7 +40,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { authUtils } from "@/lib/auth";
 import { useAuth } from "@/lib/use-auth";
 import { Badge } from "../ui/badge";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -74,7 +73,7 @@ ListItem.displayName = "ListItem";
 
 export function AppHeader() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user, logout, exportData } = useAuth();
   const { t } = useLanguage();
 
   const getInitials = (name: string) => {
@@ -362,7 +361,7 @@ export function AppHeader() {
 
               <DropdownMenuItem
                 onClick={() => {
-                  const data = authUtils.exportUserData();
+                  const data = exportData();
                   if (data) {
                     const blob = new Blob([data], { type: "application/json" });
                     const url = URL.createObjectURL(blob);
